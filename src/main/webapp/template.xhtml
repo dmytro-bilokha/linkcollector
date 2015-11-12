@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+    <h:outputStylesheet library="css" name="default.css"/>
+    <title>LinkCollector</title>
+    </h:head>
+    <h:body>
+    <h1 class="thead">LinkCollector Application</h1>
+    <div class="navbar">
+	<ul>
+	    <li><a href="http://google.com.ua">Home</a></li>
+	    <li><a href="http://google.com.ua">News</a></li>
+	    <li><a href="http://google.com.ua">Contact</a></li>
+	    <li><a href="http://google.com.ua">About</a></li>
+	</ul>
+    </div>
+    <ui:insert name="content">Content template</ui:insert>
+    </h:body>
+</html>
