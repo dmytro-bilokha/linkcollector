@@ -8,8 +8,9 @@ import javax.ejb.EJB;
 @Named
 @RequestScoped
 public class SearchDataBean {
-	@EJB private ConfigBean conf;
-	
+	@EJB
+	private ConfigBean conf;
+
 	public String getDemoString() {
 		return conf.getConfigValue("AzureKey");
 	}
