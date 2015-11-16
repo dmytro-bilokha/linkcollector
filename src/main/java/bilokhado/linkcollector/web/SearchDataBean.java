@@ -7,6 +7,7 @@ import bilokhado.linkcollector.ejb.ConfigBean;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.ejb.EJB;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,9 +26,9 @@ public class SearchDataBean implements Serializable {
 	@Inject
 	private TagsList tags;
 
-	public String addTag() {
+	public void addTag(ActionEvent evt) {
 		tags.add(new QueryTag(tagText, tagWeight));
-		return "index";
+		return;
 	}
 
 	public String removeTag(QueryTag tag) {

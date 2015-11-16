@@ -9,7 +9,7 @@
 <h:body>
 	<ui:composition template="./template.xhtml">
 		<ui:define name="content">
-			<h:form>
+			<h:form prependId="false">
 				<table class="inputform">
 					<tr>
 						<td><h:outputText value="Search query: " /></td>
@@ -37,14 +37,21 @@
 					</tr>
 					<tr class="errormessage">
 						<td></td>
-						<td><h:message for="tagweight" /></td>
+						<td><h:message for="tagweight" id="wmsg" /></td>
 					</tr>
 				</table>
 				<p>
-					<h:commandButton value="Add tag" action="#{searchDataBean.addTag}"
-						id="addtag" />
+					<h:commandButton value="Add tag" type="button" actionListener="#{searchDataBean.addTag}"
+						id="addtag">
+						<f:ajax execute="tagtext tagweight" render="wmsg tablepanel" />
+						</h:commandButton>
 				</p>
-				<h:dataTable value="#{searchDataBean.tags.tags}" var="tag">
+				<h:panelGroup id="tablepanel">
+				<h:dataTable value="#{searchDataBean.tags.tags}" var="tag" 
+				rendered="#{not empty searchDataBean.tags.tags}"
+				styleClass="tags-table" headerClass="tags-table-header"
+				rowClasses="tags-table-odd-row,tags-table-even-row" 
+				columnClasses="tags-table-1-col,tags-table-2-col,tags-table-3-col" id="tagstable">
 					<h:column>
 						<f:facet name="header">Tag</f:facet>
 				#{tag.tagText}
@@ -56,11 +63,12 @@
 					<h:column>
 						<f:facet name="header">Action</f:facet>
 						<h:commandLink value="Edit"
-							action="#{searchDataBean.editTag(tag)}" id="edit" />
+							action="#{searchDataBean.editTag(tag)}" id="edit" />&nbsp;/
 						<h:commandLink value="Delete"
 							action="#{searchDataBean.removeTag(tag)}" id="remove" />
 					</h:column>
 				</h:dataTable>
+				</h:panelGroup>
 			</h:form>
 		</ui:define>
 	</ui:composition>
