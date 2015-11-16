@@ -1,10 +1,17 @@
 body {
-        background-color: #f7f7f7;
+        background-color: #ffffff;
 	color: black;
 	text-align: justify;
 	width: 1000px;
 	margin: auto;
+	border: 1px solid black;
 } 
+
+#wrapper {
+    width: 1000px;
+    margin: 0 auto;
+    background-color: #f7f7f7;
+}
 
 p {
         text-indent: 50px;
@@ -70,4 +77,17 @@ div.navbar a:hover, a:active {
 
 .navbar {
     background-color: #e8e8e8;
+}
+
+table.inputform {
+    border-collapse: collapse;
+    padding: 0;
+    border-spacing: 0;
+}
+
+td.errormessage, tr.errormessage {
+    color: red;
+    font-size: 0.875em;
+    font-style: oblique;
+    padding: 1em;
 }

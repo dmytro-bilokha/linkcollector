@@ -1,9 +1,7 @@
 package bilokhado.linkcollector.web;
 
-import javax.inject.Named;
-
 public class QueryTag {
-
+	
 	private String tagText;
 	private int tagWeight;
 
