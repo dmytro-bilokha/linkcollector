@@ -79,17 +79,23 @@ div.navbar a:hover, a:active {
     background-color: #e8e8e8;
 }
 
+div.center {
+    margin-top: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
 table.inputform {
     border-collapse: collapse;
     padding: 0;
     border-spacing: 0;
 }
 
-.errormessage {
+.error-message {
     color: red;
     font-size: 0.875em;
     font-style: oblique;
-    padding: 1em;
 }
 
 .tags-table {   
@@ -102,36 +108,69 @@ table.inputform {
 .tags-table-header {
     font-size: 1.1em;
     text-align: center;
-    background-color: #E5E5E5;
+    background-color: #e5e5e5;
     padding: 5px 7px 4px 7px;
-    border: 1px solid #BBBBBB;
+    border: 1px solid #bbbbbb;
 }
 
 .tags-table-odd-row {
-    background-color: #FFFFFFF;
-    border: 1px solid #BBBBBB;
+    background-color: #ffffff;
+    border: 1px solid #bbbbbb;
     padding: 3px 7px 3px 7px;
 }
 
 .tags-table-even-row {
-    background-color: #F9F9F9;
-    border: 1px solid #BBBBBB;
+    background-color: #f7f7f7;
+    border: 1px solid #bbbbbb;
     padding: 3px 7px 3px 7px;
+}
+
+.tags-table-odd-row:hover {
+    color: #eeeff0;
+    background-color: #5f6975;
+}
+
+.tags-table-even-row:hover {
+    color: #eeeff0;
+    background-color: #5f6975;
 }
 
 .tags-table-1-col {
     text-align: left;
-    border: 1px solid #BBBBBB;
+    border: 1px solid #bbbbbb;
 }
 
 .tags-table-2-col {
     text-align: right;
-    border: 1px solid #BBBBBB;
+    border: 1px solid #bbbbbb;
     width: 6em;
 }
 
 .tags-table-3-col {
     text-align: center;
-    border: 1px solid #BBBBBB;
-    width: 7em;
+    border: 1px solid #bbbbbb;
+    width: 9em;
 }
+
+.tags-table-caption {
+    font-size: 1.2em;
+    text-align: center;
+    font-weight: bold;
+    padding: 7px 5px 7px 5px;
+} 
+
+.tags-table-link {
+    text-decoration: none;
+}
+
+.tags-table-link:hover {
+    color: #ff99ff;
+}
+
+p.notags-message {
+    font-size: 1.2em;
+    text-align: center;
+    font-weight: bold;
+    padding: 7px 5px 7px 5px;
+} 
+

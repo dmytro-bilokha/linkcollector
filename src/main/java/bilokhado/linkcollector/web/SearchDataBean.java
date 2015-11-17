@@ -1,12 +1,14 @@
 package bilokhado.linkcollector.web;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import bilokhado.linkcollector.ejb.ConfigBean;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.validation.constraints.Max;
@@ -25,21 +27,25 @@ public class SearchDataBean implements Serializable {
 	private Integer tagWeight;
 	@Inject
 	private TagsList tags;
-
+	private QueryTag tagEdited = null;
+	
 	public void addTag(ActionEvent evt) {
 		tags.add(new QueryTag(tagText, tagWeight));
 		return;
 	}
-
+	
 	public String removeTag(QueryTag tag) {
 		tags.remove(tag);
 		return "index";
 	}
 
 	public String editTag(QueryTag tag) {
-		tagText = tag.getTagText();
-		tagWeight = tag.getTagWeight();
-		tags.remove(tag);
+		tagEdited = tag;
+		return "index";
+	}
+
+	public String updateTag() {
+		tagEdited = null;
 		return "index";
 	}
 
@@ -70,5 +76,9 @@ public class SearchDataBean implements Serializable {
 	public TagsList getTags() {
 		return tags;
 	}
-
+	
+	public QueryTag getTagEdited() {
+		return tagEdited;
+	}
+			
 }
