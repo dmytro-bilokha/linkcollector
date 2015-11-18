@@ -5,12 +5,16 @@ body {
     width: 1000px;
     margin: auto;
     border: 1px solid black;
+    box-shadow: 1px 1px 9px grey;
 } 
 
 #wrapper {
     width: 1000px;
+    min-height: 1000px;
     margin: 0 auto;
     background-color: #f7f7f7;
+    padding: 0 0 3em 0;
+    position: relative;
 }
 
 p {
@@ -79,6 +83,28 @@ div.navbar a:hover, a:active {
     background-color: #e8e8e8;
 }
 
+.input-button {
+    font-weight: 700;
+    color: black;
+    background-color: #ffff99;
+}
+
+div.copyright {
+    width: 1000px;
+    background-color: green;
+    color: white;
+    position: absolute;
+    bottom: 0;
+}
+
+div.copyright p {
+    text-align: left;
+    font-size: 0.875em;
+    line-height: 1;
+    padding: 5px 5px 5px 5px;
+    margin: 0 0 0 0;
+}
+
 div.center {
     margin-top: 16px;
     margin-left: auto;
@@ -88,8 +114,13 @@ div.center {
 
 table.inputform {
     border-collapse: collapse;
-    padding: 0;
+    padding: 5px 0 5px 0;
     border-spacing: 0;
+}
+
+table.inputform td {
+    padding: 3px 0 3px 0;
+    white-space: nowrap;
 }
 
 .error-message {
@@ -116,13 +147,11 @@ table.inputform {
 .tags-table-odd-row {
     background-color: #ffffff;
     border: 1px solid #bbbbbb;
-    padding: 3px 7px 3px 7px;
 }
 
 .tags-table-even-row {
     background-color: #f7f7f7;
     border: 1px solid #bbbbbb;
-    padding: 3px 7px 3px 7px;
 }
 
 .tags-table-odd-row:hover {
@@ -137,17 +166,20 @@ table.inputform {
 
 .tags-table-1-col {
     text-align: left;
+    padding: 3px 7px 3px 7px;
     border: 1px solid #bbbbbb;
 }
 
 .tags-table-2-col {
     text-align: right;
+    padding: 3px 7px 3px 7px;
     border: 1px solid #bbbbbb;
     width: 6em;
 }
 
 .tags-table-3-col {
     text-align: center;
+    padding: 3px 7px 3px 7px;
     border: 1px solid #bbbbbb;
     width: 9em;
 }
