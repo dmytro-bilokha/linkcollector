@@ -44,8 +44,9 @@
 					</table>
 					<p>
 						<h:commandButton value="Add tag" type="button"
-							actionListener="#{searchDataBean.addTag}"
-							styleClass="input-button" id="addtag">
+							action="#{searchDataBean.addTag}" styleClass="input-button"
+							id="addtag">
+							<f:param name="cid" value="#{searchDataBean.conversationId}" />
 							<f:ajax execute="tagtext tagweight" render="wmsg tablepanel" />
 						</h:commandButton>
 					</p>
@@ -85,10 +86,10 @@
 								title="Weight of tag for scoring" size="5" maxlength="4"
 								required="true" requiredMessage="Enter weight"
 								converterMessage="Must be integer"
-								validatorMessage="Must be from -999 to 10000"
+								validatorMessage="Must be from -999 to 9999"
 								value="#{tag.tagWeight}" style="display:block"
 								id="edittagweight">
-								<f:validateLongRange minimum="-5" maximum="5" />
+								<f:validateLongRange minimum="-999" maximum="9999" />
 							</h:inputText>
 							<h:message for="edittagweight" styleClass="error-message"
 								id="etw-msg" />
@@ -99,17 +100,20 @@
 								rendered="#{tag ne searchDataBean.tagEdited}"
 								action="#{searchDataBean.editTag(tag)}"
 								styleClass="tags-table-link" id="edit">
+								<f:param name="cid" value="#{searchDataBean.conversationId}" />
 								<f:ajax execute="tablepanel" render="tablepanel" />
 							</h:commandLink>
 							<h:commandLink value="Update"
 								rendered="#{tag eq searchDataBean.tagEdited}"
 								action="#{searchDataBean.updateTag}"
 								styleClass="tags-table-link" id="update">
+								<f:param name="cid" value="#{searchDataBean.conversationId}" />
 								<f:ajax execute="tablepanel" render="tablepanel" />
 							</h:commandLink>&nbsp;/
 						<h:commandLink value="Delete"
 								action="#{searchDataBean.removeTag(tag)}"
 								styleClass="tags-table-link" id="remove">
+								<f:param name="cid" value="#{searchDataBean.conversationId}" />
 								<f:ajax execute="tablepanel" render="tablepanel" />
 							</h:commandLink>
 						</h:column>

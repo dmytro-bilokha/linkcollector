@@ -23,6 +23,11 @@ public class TagInValidator implements Validator {
 					"Tag\'s text pattern and weight are required", null);
 			throw new ValidatorException(msg);
 		}
+		if (weight < -999 || weight > 9999) {
+			FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Weight must be from -999 to 9999", null);
+			throw new ValidatorException(msg);
+		}
 		return;
 	}
 

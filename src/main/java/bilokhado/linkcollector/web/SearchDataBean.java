@@ -1,52 +1,48 @@
 package bilokhado.linkcollector.web;
 
 import java.io.Serializable;
-import java.util.Map;
-
 import bilokhado.linkcollector.ejb.ConfigBean;
-
-import javax.enterprise.context.SessionScoped;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.inject.Named;
 import javax.ejb.EJB;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 @Named
-@SessionScoped
+@ConversationScoped
 public class SearchDataBean implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Size(min=1, message="Please, enter search query")
+	@Inject
+	private Conversation conversation;
+
 	private String searchQuery;
 	private String tagText;
-	@Min(value=-999, message="Weight must be above -1000")
-	@Max(value=9999, message="Weight must be below 10000")
 	private Integer tagWeight;
 	@Inject
 	private TagsList tags;
 	private QueryTag tagEdited = null;
-	
-	public void addTag(ActionEvent evt) {
+
+	@PostConstruct
+	private void beginConversation() {
+		if (conversation.isTransient())
+			conversation.begin();
+	}
+
+	public void addTag() {
 		tags.add(new QueryTag(tagText, tagWeight));
-		return;
 	}
-	
-	public String removeTag(QueryTag tag) {
+
+	public void removeTag(QueryTag tag) {
 		tags.remove(tag);
-		return "index";
 	}
 
-	public String editTag(QueryTag tag) {
+	public void editTag(QueryTag tag) {
 		tagEdited = tag;
-		return "index";
 	}
 
-	public String updateTag() {
+	public void updateTag() {
 		tagEdited = null;
-		return "index";
 	}
 
 	public String getSearchQuery() {
@@ -76,9 +72,13 @@ public class SearchDataBean implements Serializable {
 	public TagsList getTags() {
 		return tags;
 	}
-	
+
 	public QueryTag getTagEdited() {
 		return tagEdited;
 	}
-			
+
+	public String getConversationId() {
+		return conversation.getId();
+	}
+
 }
