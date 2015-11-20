@@ -16,18 +16,19 @@
 							<td><h:outputText value="Search query: " /></td>
 							<td><h:inputText value="#{searchDataBean.searchQuery}"
 									title="String for passing to search engines" style="width:99%"
-									id="searchquery" /></td>
+									required="true" requiredMessage="Please, provide search query"
+									autocomplete="off" id="searchquery" /></td>
 						</tr>
 						<tr class="error-message">
 							<td></td>
-							<td><h:message for="searchquery" /></td>
+							<td><h:message for="searchquery" id="qmsg" /></td>
 						</tr>
 						<tr>
 							<td><h:outputText value="Tag to add: " /></td>
 							<td><h:inputText value="#{searchDataBean.tagText}"
 									title="Evaluation tag string" size="25" maxlenght="50"
-									binding="#{tagTextComponent}" id="tagtext" /> <h:outputText
-									value=" Tag weight: " /> <h:inputText
+									autocomplete="off" binding="#{tagTextComponent}" id="tagtext" />
+								<h:outputText value=" Tag weight: " /> <h:inputText
 									value="#{searchDataBean.tagWeight}"
 									title="Weight of tag for scoring" size="5" maxlength="4"
 									converterMessage="Weight must be integer value from -999 to 10000"
@@ -48,6 +49,11 @@
 							id="addtag">
 							<f:param name="cid" value="#{searchDataBean.conversationId}" />
 							<f:ajax execute="tagtext tagweight" render="wmsg tablepanel" />
+						</h:commandButton>
+						<h:commandButton value="Search" action="#{searchDataBean.gotoSearch}" styleClass="input-button"
+							id="search">
+							<f:param name="cid" value="#{searchDataBean.conversationId}" />
+							<f:ajax execute="searchquery" render="qmsg" />
 						</h:commandButton>
 					</p>
 				</div>
@@ -72,7 +78,7 @@
 							<h:outputText rendered="#{tag ne searchDataBean.tagEdited}"
 								value="#{tag.tagText}" />
 							<h:inputText rendered="#{tag eq searchDataBean.tagEdited}"
-								title="Tag pattern" required="true"
+								title="Tag pattern" required="true" autocomplete="off"
 								requiredMessage="Enter tag pattern" size="25" maxlenght="50"
 								value="#{tag.tagText}" style="display:block" id="edittagtext" />
 							<h:message for="edittagtext" styleClass="error-message"
@@ -84,7 +90,8 @@
 								value="#{tag.tagWeight}" />
 							<h:inputText rendered="#{tag eq searchDataBean.tagEdited}"
 								title="Weight of tag for scoring" size="5" maxlength="4"
-								required="true" requiredMessage="Enter weight"
+								autocomplete="off" required="true"
+								requiredMessage="Enter weight"
 								converterMessage="Must be integer"
 								validatorMessage="Must be from -999 to 9999"
 								value="#{tag.tagWeight}" style="display:block"

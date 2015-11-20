@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://xmlns.jcp.org/jsf/html"
+		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+		xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:metadata>
+    <f:viewParam name="q" value="#{resultViewBean.searchQuery}" id="query" 
+    required="true" requiredMessage="Malformed URL - search query is required" />
+    <f:viewParam name="tags" value="#{resultViewBean.tags}" id="tags" 
+    required="true" requiredMessage="Malformed URL - tags table is required" />
+    </f:metadata>
+
+    <h:body>
+    <ui:composition template="./template.xhtml">
+    <ui:define name="content">
+    <p><h:message for="query" styleClass="error-message" /></p>
+    <p><h:message for="tags" styleClass="error-message" /></p>
+    <p>Your query is: "#{resultViewBean.searchQuery}"</p>
+    <p>Tags table is: "#{resultViewBean.tags}"</p>
+    <h:dataTable value="#{resultViewBean.tags.tags}" var="tag" >
+    <h:column>#{tag.tagText}</h:column>
+    <h:column>#{tag.tagWeight}</h:column>
+    </h:dataTable>
+    </ui:define>
+    </ui:composition>
+    </h:body>
+</html>

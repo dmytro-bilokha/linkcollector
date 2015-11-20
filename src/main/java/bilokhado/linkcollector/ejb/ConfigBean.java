@@ -27,7 +27,6 @@ public class ConfigBean {
 	private void init() {
 		Properties props = new Properties();
 		try {
-			logger.log(Level.INFO, "Trying to load properties file");
 			props.load(ConfigBean.class.getResourceAsStream(CONFIG_FILE));
 			logger.log(Level.INFO, "Properties file loaded successfully");
 		} catch (Exception ex) {
