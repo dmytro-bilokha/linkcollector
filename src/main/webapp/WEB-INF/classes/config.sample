@@ -1,0 +1,6 @@
+#Time of live for conversation with tags table, seconds
+ConversationTimeout=300
+#Put here your 64-encoded MS Azure API access key. It can be obtained from plain key with this code snippet:
+#String azurePlainKey = "YOUR_KEY_HERE";
+#String azureKey = Base64.getEncoder().encodeToString( (azureKey + ':' + azureKey).getBytes(StandardCharsets.UTF_8));
+AzureKey=ENCODE_YOUR_AZURE_API_KEY_AND_PUT_IT_HERE
