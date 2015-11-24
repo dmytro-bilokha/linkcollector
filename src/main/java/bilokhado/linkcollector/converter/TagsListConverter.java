@@ -1,4 +1,4 @@
-package bilokhado.linkcollector.web;
+package bilokhado.linkcollector.converter;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -6,6 +6,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
+
+import bilokhado.linkcollector.web.TagsList;
 
 @FacesConverter(forClass = TagsList.class)
 public class TagsListConverter implements Converter {

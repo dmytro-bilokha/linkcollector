@@ -1,4 +1,4 @@
-package bilokhado.linkcollector.web;
+package bilokhado.linkcollector.validator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;

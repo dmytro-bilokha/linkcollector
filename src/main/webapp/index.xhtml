@@ -32,7 +32,7 @@
 									value="#{searchDataBean.tagWeight}"
 									title="Weight of tag for scoring" size="5" maxlength="4"
 									converterMessage="Weight must be integer value from -999 to 10000"
-									id="tagweight">
+									autocomplete="off" id="tagweight">
 									<f:validator validatorId="tagInValidator" />
 									<f:attribute name="tagTextComponent"
 										value="#{tagTextComponent}" />
