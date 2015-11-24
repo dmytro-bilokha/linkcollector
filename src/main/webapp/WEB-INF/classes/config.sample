@@ -4,3 +4,7 @@ ConversationTimeout=300
 #String azurePlainKey = "YOUR_KEY_HERE";
 #String azureKey = Base64.getEncoder().encodeToString( (azureKey + ':' + azureKey).getBytes(StandardCharsets.UTF_8));
 AzureKey=ENCODE_YOUR_AZURE_API_KEY_AND_PUT_IT_HERE
+#Connection timeout to Azure server, ms
+ConnectTimeout=10000
+#Timeout for reading data from Azure server, ms
+ReaderTimeout=10000

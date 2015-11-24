@@ -33,10 +33,13 @@ public class SearcherBean {
 	@EJB
 	private ConfigBean config;
 	private String azureKeyEnc;
+	private int connectTimeout, readerTimeout;
 
 	@PostConstruct
 	private void init() {
 		azureKeyEnc = config.getConfigValue("AzureKey");
+		connectTimeout = Integer.parseInt(config.getConfigValue("ConnectTimeout"));
+		readerTimeout = Integer.parseInt(config.getConfigValue("ReaderTimeout"));
 	}
 
 	public List<WebResult> search(String query) throws Exception {
@@ -58,8 +61,8 @@ public class SearcherBean {
 			urlcon = (HttpURLConnection) azureUrl.openConnection();
 			urlcon.setRequestMethod("GET");
 			urlcon.setRequestProperty("Authorization", "Basic " + azureKeyEnc);
-			urlcon.setConnectTimeout(10000); // 10 s
-			urlcon.setReadTimeout(10000); // 10 s
+			urlcon.setConnectTimeout(connectTimeout);
+			urlcon.setReadTimeout(readerTimeout);
 			stream = new InputStreamReader(urlcon.getInputStream(),
 					StandardCharsets.UTF_8);
 		} catch (MalformedURLException e) {
