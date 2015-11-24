@@ -46,9 +46,8 @@ public class TagsList implements Serializable {
 			throw new Exception("Unable to decode JSON from URL: "
 					+ encodedJsonData);
 		}
-		JsonParser parser = Json.createParser(new StringReader(jsonData));
-		String key = null;
-		try {
+		try (JsonParser parser = Json.createParser(new StringReader(jsonData))) {
+			String key = null;
 			while (parser.hasNext()) {
 				JsonParser.Event event = parser.next();
 				switch (event) {
@@ -81,15 +80,14 @@ public class TagsList implements Serializable {
 	@Override
 	public String toString() {
 		StringWriter buffer = new StringWriter();
-		JsonGenerator jgen = Json.createGenerator(buffer);
-		jgen.writeStartObject();
-		tags.forEach(t -> jgen.write(t.getTagText(), t.getTagWeight()));
-		jgen.writeEnd();
-		jgen.flush();
-		try {
+		try (JsonGenerator jgen = Json.createGenerator(buffer)) {
+			jgen.writeStartObject();
+			tags.forEach(t -> jgen.write(t.getTagText(), t.getTagWeight()));
+			jgen.writeEnd();
+			jgen.flush();
 			return URLEncoder.encode(buffer.toString(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.log(Level.SEVERE, "Unable to encode URL with list of tags "
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Unable to encode URL with list of tags: "
 					+ buffer.toString());
 			return null;
 		}

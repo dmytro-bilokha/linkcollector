@@ -5,7 +5,6 @@ import java.io.Serializable;
 import bilokhado.linkcollector.ejb.ConfigBean;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.inject.Named;
