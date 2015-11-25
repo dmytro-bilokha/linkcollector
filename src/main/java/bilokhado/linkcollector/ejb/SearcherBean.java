@@ -19,10 +19,13 @@ import javax.json.JsonReader;
 import javax.json.JsonObject;
 import javax.json.JsonArray;
 import javax.json.Json;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import bilokhado.linkcollector.entity.SearchQuery;
 import bilokhado.linkcollector.entity.WebResult;
 
 @Stateless
@@ -32,6 +35,9 @@ public class SearcherBean {
 	private static String AZURE_URL_PATTERN = "https://api.datamarket.azure.com/Bing/Search/v1/Web?Options=%%27DisableLocationDetection%%27&$top=5&$format=json&Query=%%27%s%%27";
 	@EJB
 	private ConfigBean config;
+	@PersistenceContext
+	EntityManager em;
+	private long id = 0;
 	private String azureKeyEnc;
 	private int connectTimeout, readerTimeout;
 
@@ -42,7 +48,13 @@ public class SearcherBean {
 		readerTimeout = Integer.parseInt(config.getConfigValue("ReaderTimeout"));
 	}
 
+	private void fixTimestamp() {
+		SearchQuery query = new SearchQuery(id++);
+		em.persist(query);
+	}
+	
 	public List<WebResult> search(String query) throws Exception {
+		fixTimestamp();
 		List<WebResult> searchResult = new LinkedList<>();
 		HttpURLConnection urlcon = null;
 		InputStreamReader stream;
