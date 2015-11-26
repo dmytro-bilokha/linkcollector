@@ -11,33 +11,71 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="SEARCH_QUERY")
+@Table(name = "SEARCH_QUERY")
 public class SearchQuery implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@Column(name="QUERY_HASH", updatable = false, nullable = false)
+	@Column(name = "QUERY_HASH", updatable = false, nullable = false)
 	private long queryHash;
-	@Column(name="TIME_PERSIST", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-	@Temporal(TemporalType.TIMESTAMP)		
+	@Column(name = "TIME_PERSIST", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date timeStamp;
-	
-	public SearchQuery() {}
-	
+
+	public SearchQuery() {
+	}
+
 	public SearchQuery(long queryHash) {
 		this.queryHash = queryHash;
 	}
-	
+
 	public long getQueryHash() {
 		return queryHash;
 	}
+
 	public void setQueryHash(long queryHash) {
 		this.queryHash = queryHash;
 	}
+
 	public Date getTimeStamp() {
 		return timeStamp;
 	}
+
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = prime + (int) (queryHash ^ (queryHash >>> 32));
+		result = prime * result
+				+ ((timeStamp == null) ? 0 : timeStamp.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchQuery other = (SearchQuery) obj;
+		if (queryHash != other.queryHash)
+			return false;
+		if (timeStamp == null) {
+			if (other.timeStamp != null)
+				return false;
+		} else if (!timeStamp.equals(other.timeStamp))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "SearchQuery [queryHash=" + queryHash + "]";
+	}
+
 }

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.io.IOException;
@@ -21,6 +22,8 @@ import javax.json.JsonArray;
 import javax.json.Json;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -33,28 +36,55 @@ public class SearcherBean {
 	private static final Logger logger = Logger
 			.getLogger("bilokhado.linkcollector.ejb.SearcherBean");
 	private static String AZURE_URL_PATTERN = "https://api.datamarket.azure.com/Bing/Search/v1/Web?Options=%%27DisableLocationDetection%%27&$top=5&$format=json&Query=%%27%s%%27";
+	private static Pattern WHITESPACES = Pattern.compile("\\s+");
 	@EJB
 	private ConfigBean config;
 	@PersistenceContext
 	EntityManager em;
-	private long id = 0;
 	private String azureKeyEnc;
 	private int connectTimeout, readerTimeout;
 
 	@PostConstruct
 	private void init() {
 		azureKeyEnc = config.getConfigValue("AzureKey");
-		connectTimeout = Integer.parseInt(config.getConfigValue("ConnectTimeout"));
-		readerTimeout = Integer.parseInt(config.getConfigValue("ReaderTimeout"));
+		connectTimeout = Integer.parseInt(config
+				.getConfigValue("ConnectTimeout"));
+		readerTimeout = Integer
+				.parseInt(config.getConfigValue("ReaderTimeout"));
 	}
 
-	private void fixTimestamp() {
-		SearchQuery query = new SearchQuery(id++);
-		em.persist(query);
+	public String normalizeQuery(String queryText) {
+		return WHITESPACES.matcher(queryText).replaceAll(" ").toLowerCase();
+	}
+
+	public long calculateQueryHash(String query) {
+		String words[] = WHITESPACES.split(query);
+		long hash = 0;
+		long lenchars = 0;
+		for (String word : words) {
+			hash += word.hashCode();
+			lenchars += word.length();
+		}
+		hash = hash ^ (lenchars << 32) ^ (((long) words.length) << 48);
+		return hash;
+	}
+
+	public List<WebResult> search(String query) throws Exception {
+		String normalizedQuery = normalizeQuery(query);
+		long queryHash = calculateQueryHash(normalizedQuery);
+		TypedQuery<WebResult> dbQuery = em.createNamedQuery("WebResult.findByQueryHash", WebResult.class);
+		List<WebResult> cachedLinks = dbQuery.setParameter("hash", queryHash).getResultList();
+		if (!cachedLinks.isEmpty()) {
+			System.out.println("Got from cache: "+ normalizedQuery);
+			return cachedLinks;	
+		}
+		SearchQuery queryObj = new SearchQuery(queryHash);
+		em.persist(queryObj);
+		System.out.println("Calling Bing: "+ normalizedQuery);
+		return findAndSave(normalizedQuery, queryObj);
 	}
 	
-	public List<WebResult> search(String query) throws Exception {
-		fixTimestamp();
+	public List<WebResult> findAndSave(String query, SearchQuery queryObj) throws Exception {
 		List<WebResult> searchResult = new LinkedList<>();
 		HttpURLConnection urlcon = null;
 		InputStreamReader stream;
@@ -115,10 +145,12 @@ public class SearcherBean {
 			int resultsLength = results.size();
 			for (int i = 0; i < resultsLength; i++) {
 				JsonObject result = results.getJsonObject(i);
-				searchResult.add(new WebResult(result.getString("Title"),
-						result.getString("Url"),
-						result.getString("DisplayUrl"), result
-								.getString("Description")));
+				WebResult found = (new WebResult(queryObj,
+						result.getString("Title"), result.getString("Url"),
+						result.getString("DisplayUrl"),
+						result.getString("Description")));
+				searchResult.add(found);
+				em.persist(found);
 			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE,
