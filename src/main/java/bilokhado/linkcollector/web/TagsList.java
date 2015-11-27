@@ -6,8 +6,11 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +37,26 @@ public class TagsList implements Serializable {
 
 	public void remove(QueryTag tag) {
 		tags.remove(tag);
+	}
+
+	private void normalize() {
+		Map<String, Boolean> seen = new HashMap<>();
+		ListIterator<QueryTag> iterator = tags.listIterator(tags.size());
+		while (iterator.hasPrevious()) {
+			QueryTag t = iterator.previous();
+			t.setTagText(t.getTagText().toLowerCase());
+			if (seen.putIfAbsent(t.getTagText(), Boolean.TRUE) != null
+					|| t.getTagWeight() == 0) {
+				iterator.remove();
+			}
+		}
+	}
+
+	public long calculateHash() {
+		long hash = 1;
+		for (QueryTag t : tags)
+			hash = 31 * hash + t.hashCode();
+		return hash;
 	}
 
 	public void populateFromUrl(String encodedJsonData) throws Exception {
@@ -75,6 +98,7 @@ public class TagsList implements Serializable {
 					+ jsonData);
 			throw new Exception("Unable to decode tags list from URL");
 		}
+		normalize();
 	}
 
 	@Override

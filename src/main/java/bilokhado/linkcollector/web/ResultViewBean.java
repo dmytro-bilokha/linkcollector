@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import bilokhado.linkcollector.ejb.SearcherBean;
+import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.WebResult;
 
 @Named
@@ -19,14 +20,14 @@ public class ResultViewBean implements Serializable {
 
 	private String searchQuery;
 	private TagsList tags;
-	private List<WebResult> searchResult;
+	private List<ScoringResult> searchResult;
 	
 	@EJB
 	SearcherBean searcher;
 
 	public void onload() {
 		try {
-			searchResult = searcher.search(searchQuery);
+			searchResult = searcher.search(searchQuery, tags);
 		} catch (Exception e) {
 			FacesMessage message = new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
@@ -53,7 +54,7 @@ public class ResultViewBean implements Serializable {
 		this.tags = tags;
 	}
 
-	public List<WebResult> getSearchResult() {
+	public List<ScoringResult> getSearchResult() {
 		return searchResult;
 	}
 	

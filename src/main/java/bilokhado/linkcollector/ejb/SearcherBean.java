@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,8 +30,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.SearchQuery;
 import bilokhado.linkcollector.entity.WebResult;
+import bilokhado.linkcollector.web.TagsList;
 
 @Stateless
 public class SearcherBean {
@@ -69,22 +73,46 @@ public class SearcherBean {
 		return hash;
 	}
 
-	public List<WebResult> search(String query) throws Exception {
+	public List<ScoringResult> search(String query, TagsList tags)
+			throws Exception {
 		String normalizedQuery = normalizeQuery(query);
 		long queryHash = calculateQueryHash(normalizedQuery);
-		TypedQuery<WebResult> dbQuery = em.createNamedQuery("WebResult.findByQueryHash", WebResult.class);
-		List<WebResult> cachedLinks = dbQuery.setParameter("hash", queryHash).getResultList();
-		if (!cachedLinks.isEmpty()) {
-			System.out.println("Got from cache: "+ normalizedQuery);
-			return cachedLinks;	
+		TypedQuery<WebResult> dbQuery = em.createNamedQuery(
+				"WebResult.findByQueryHash", WebResult.class);
+		List<WebResult> webLinks = dbQuery.setParameter("hash", queryHash)
+				.getResultList();
+		boolean gotWebLinksFromCache = true;
+		if (webLinks.isEmpty()) {
+			SearchQuery queryObj = new SearchQuery(queryHash);
+			em.persist(queryObj);
+			webLinks = findAndSave(normalizedQuery, queryObj);
+			gotWebLinksFromCache = false;
 		}
-		SearchQuery queryObj = new SearchQuery(queryHash);
-		em.persist(queryObj);
-		System.out.println("Calling Bing: "+ normalizedQuery);
-		return findAndSave(normalizedQuery, queryObj);
+		List<ScoringResult> scoredResults = null;
+		long tagsHash = tags.calculateHash();
+		if (gotWebLinksFromCache) {
+			TypedQuery<ScoringResult> srQuery = em.createNamedQuery(
+					"ScoringResult.findByTagsHash", ScoringResult.class);
+			scoredResults = srQuery.setParameter("hash",
+					tagsHash).getResultList();
+		}
+		if(!gotWebLinksFromCache || scoredResults.isEmpty()) {
+			//TODO add scoring code, when scored results is not cached
+			scoredResults = new ArrayList<>(webLinks.size());
+			java.util.Random rnd = new java.util.Random(); 
+			for (WebResult wr : webLinks) {
+				ScoringResult sr = new ScoringResult(tagsHash, wr, rnd.nextInt(1000));
+				scoredResults.add(sr);
+				em.persist(sr);
+			}
+			Collections.sort(scoredResults);
+		}
+		return scoredResults;
+
 	}
-	
-	public List<WebResult> findAndSave(String query, SearchQuery queryObj) throws Exception {
+
+	public List<WebResult> findAndSave(String query, SearchQuery queryObj)
+			throws Exception {
 		List<WebResult> searchResult = new LinkedList<>();
 		HttpURLConnection urlcon = null;
 		InputStreamReader stream;

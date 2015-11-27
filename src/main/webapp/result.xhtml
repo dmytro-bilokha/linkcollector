@@ -31,12 +31,13 @@
 			<p>Tags table is: "#{resultViewBean.tags}"</p>
 			<h:dataTable value="#{resultViewBean.searchResult}" var="srt">
 				<h:column>
-					<h:outputText value="Score: 0" />
+					<h:outputText value="Score:" />
+					<h:outputText value="#{srt.score}" />
 				</h:column>
 				<h:column>
-					<h:outputText value="#{srt.title}" />
-					<h:outputText value="#{srt.displayUrl}" />
-					<h:outputText value="#{srt.description}" />
+					<p><h:outputText value="#{srt.scoredWebResult.title}" /></p>
+					<p><h:outputText value="#{srt.scoredWebResult.displayUrl}" /></p>
+					<p><h:outputText value="#{srt.scoredWebResult.description}" /></p>
 				</h:column>
 			</h:dataTable>
 			<h:dataTable value="#{resultViewBean.tags.tags}" var="tag">
