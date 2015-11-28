@@ -59,16 +59,7 @@ public class TagsList implements Serializable {
 		return hash;
 	}
 
-	public void populateFromUrl(String encodedJsonData) throws Exception {
-		String jsonData = null;
-		try {
-			jsonData = URLDecoder.decode(encodedJsonData, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.log(Level.SEVERE, "Unable to decode JSON from URL: "
-					+ encodedJsonData);
-			throw new Exception("Unable to decode JSON from URL: "
-					+ encodedJsonData);
-		}
+	public void populateFromUrl(String jsonData) throws Exception {
 		try (JsonParser parser = Json.createParser(new StringReader(jsonData))) {
 			String key = null;
 			while (parser.hasNext()) {
@@ -109,7 +100,7 @@ public class TagsList implements Serializable {
 			tags.forEach(t -> jgen.write(t.getTagText(), t.getTagWeight()));
 			jgen.writeEnd();
 			jgen.flush();
-			return URLEncoder.encode(buffer.toString(), "UTF-8");
+			return buffer.toString();
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Unable to encode URL with list of tags: "
 					+ buffer.toString());
