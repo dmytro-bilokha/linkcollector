@@ -206,3 +206,43 @@ p.notags-message {
     padding: 7px 5px 7px 5px;
 } 
 
+.results-table {   
+    border-collapse: collapse;
+    padding: 3px 9px 3px 9px;
+    border: 0px;
+}
+
+.results-table-1-col {
+    text-align: center;
+    font-weight: bold;
+    color: #1b7639;
+    width: 5em;
+    padding: 1px 1px 1px 1px;
+}
+
+.results-table-2-col {
+    text-align: left;
+    font-weight: normal;
+    padding: 2em 1px 1px 1px;
+}
+
+.results-table p {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.results-table-2-col a {
+    font-size: 1.2em;
+}
+
+.results-table-2-col a:visited {
+	color: #69059b;
+}
+
+.results-table-2-col a:hover {
+	color: #0089b7;
+}
+
+.display-url {
+    color: #1b7639;
+}

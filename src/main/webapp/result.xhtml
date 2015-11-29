@@ -29,15 +29,30 @@
 			</p>
 			<p>Your query is: "#{resultViewBean.searchQuery}"</p>
 			<p>Tags table is: "#{resultViewBean.tags}"</p>
-			<h:dataTable value="#{resultViewBean.searchResult}" var="srt">
+			<h:dataTable value="#{resultViewBean.searchResult}" var="srt"
+				styleClass="results-table" rowClasses="results-table-row"
+				columnClasses="results-table-1-col,results-table-2-col">
 				<h:column>
-					<h:outputText value="Score:" />
-					<h:outputText value="#{srt.score}" />
+					<p>
+						<h:outputText value="Score:" />
+					</p>
+					<p>
+						<h:outputText value="#{srt.score}" />
+					</p>
 				</h:column>
 				<h:column>
-					<p><h:outputText value="#{srt.scoredWebResult.title}" /></p>
-					<p><h:outputText value="#{srt.scoredWebResult.displayUrl}" /></p>
-					<p><h:outputText value="#{srt.scoredWebResult.description}" /></p>
+					<p>
+						<h:outputLink value="#{srt.scoredWebResult.url}">
+						#{srt.scoredWebResult.title}
+						</h:outputLink>
+					</p>
+					<p>
+						<h:outputText value="#{srt.scoredWebResult.displayUrl}"
+							styleClass="display-url" />
+					</p>
+					<p>
+						<h:outputText value="#{srt.scoredWebResult.description}" />
+					</p>
 				</h:column>
 			</h:dataTable>
 			<h:dataTable value="#{resultViewBean.tags.tags}" var="tag">
