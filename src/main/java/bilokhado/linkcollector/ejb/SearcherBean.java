@@ -33,6 +33,7 @@ import javax.ejb.Stateless;
 import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.SearchQuery;
 import bilokhado.linkcollector.entity.WebResult;
+import bilokhado.linkcollector.web.QueryTag;
 import bilokhado.linkcollector.web.TagsList;
 
 @Stateless
@@ -43,6 +44,8 @@ public class SearcherBean {
 	private static Pattern WHITESPACES = Pattern.compile("\\s+");
 	@EJB
 	private ConfigBean config;
+	@EJB
+	private ScoringBean scorer;
 	@PersistenceContext
 	EntityManager em;
 	private String azureKeyEnc;
@@ -93,15 +96,15 @@ public class SearcherBean {
 		if (gotWebLinksFromCache) {
 			TypedQuery<ScoringResult> srQuery = em.createNamedQuery(
 					"ScoringResult.findByTagsHash", ScoringResult.class);
-			scoredResults = srQuery.setParameter("hash",
-					tagsHash).getResultList();
+			scoredResults = srQuery.setParameter("hash", tagsHash)
+					.getResultList();
 		}
-		if(!gotWebLinksFromCache || scoredResults.isEmpty()) {
-			//TODO add scoring code, when scored results is not cached
+		if (!gotWebLinksFromCache || scoredResults.isEmpty()) {
 			scoredResults = new ArrayList<>(webLinks.size());
-			java.util.Random rnd = new java.util.Random(); 
+			QueryTag[] tagsArray = tags.getTagsArray();
 			for (WebResult wr : webLinks) {
-				ScoringResult sr = new ScoringResult(tagsHash, wr, rnd.nextInt(1000));
+				int score = scorer.determineScore(tagsArray, wr);
+				ScoringResult sr = new ScoringResult(tagsHash, wr, score);
 				scoredResults.add(sr);
 				em.persist(sr);
 			}

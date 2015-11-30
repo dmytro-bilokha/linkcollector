@@ -59,6 +59,11 @@ public class TagsList implements Serializable {
 		return hash;
 	}
 
+	public QueryTag[] getTagsArray() {
+		QueryTag[] array = new QueryTag[tags.size()];
+		return tags.toArray(array);
+	}
+
 	public void populateFromUrl(String jsonData) throws Exception {
 		try (JsonParser parser = Json.createParser(new StringReader(jsonData))) {
 			String key = null;
