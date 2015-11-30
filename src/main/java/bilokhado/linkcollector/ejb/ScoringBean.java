@@ -3,9 +3,9 @@ package bilokhado.linkcollector.ejb;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import bilokhado.linkcollector.entity.QueryTag;
 import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.WebResult;
-import bilokhado.linkcollector.web.QueryTag;
 
 import java.util.concurrent.Future;
 import java.util.logging.Level;

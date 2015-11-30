@@ -3,6 +3,8 @@ package bilokhado.linkcollector.web;
 import java.io.Serializable;
 
 import bilokhado.linkcollector.ejb.ConfigBean;
+import bilokhado.linkcollector.entity.QueryTag;
+import bilokhado.linkcollector.entity.TagsList;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Conversation;

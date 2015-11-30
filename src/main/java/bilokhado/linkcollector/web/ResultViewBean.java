@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import bilokhado.linkcollector.ejb.SearcherBean;
 import bilokhado.linkcollector.entity.ScoringResult;
+import bilokhado.linkcollector.entity.TagsList;
 
 @Named
 @RequestScoped

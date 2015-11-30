@@ -31,11 +31,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import bilokhado.linkcollector.entity.QueryTag;
 import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.SearchQuery;
+import bilokhado.linkcollector.entity.TagsList;
 import bilokhado.linkcollector.entity.WebResult;
-import bilokhado.linkcollector.web.QueryTag;
-import bilokhado.linkcollector.web.TagsList;
 
 @Stateless
 public class SearcherBean {
