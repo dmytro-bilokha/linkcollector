@@ -11,7 +11,6 @@ import javax.inject.Named;
 
 import bilokhado.linkcollector.ejb.SearcherBean;
 import bilokhado.linkcollector.entity.ScoringResult;
-import bilokhado.linkcollector.entity.WebResult;
 
 @Named
 @RequestScoped
@@ -21,7 +20,7 @@ public class ResultViewBean implements Serializable {
 	private String searchQuery;
 	private TagsList tags;
 	private List<ScoringResult> searchResult;
-	
+
 	@EJB
 	SearcherBean searcher;
 
@@ -32,11 +31,9 @@ public class ResultViewBean implements Serializable {
 			FacesMessage message = new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			//TODO: add code for dialing with searchResult == null
+			// TODO: add code for dialing with searchResult == null
 		}
 	}
-	
-	
 
 	public String getSearchQuery() {
 		return searchQuery;
@@ -57,5 +54,5 @@ public class ResultViewBean implements Serializable {
 	public List<ScoringResult> getSearchResult() {
 		return searchResult;
 	}
-	
+
 }

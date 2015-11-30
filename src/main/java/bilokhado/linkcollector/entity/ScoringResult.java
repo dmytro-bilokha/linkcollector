@@ -28,8 +28,7 @@ public class ScoringResult implements Serializable, Comparable<ScoringResult> {
 	public ScoringResult() {
 	}
 
-	public ScoringResult(long tagsHash, WebResult scoredWebResult, int score) {
-		this.tagsHash = tagsHash;
+	public ScoringResult(WebResult scoredWebResult, int score) {
 		this.scoredWebResult = scoredWebResult;
 		this.score = score;
 	}
@@ -57,7 +56,7 @@ public class ScoringResult implements Serializable, Comparable<ScoringResult> {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
+
 	@Override
 	public int compareTo(ScoringResult other) {
 		if (this.score > other.getScore())
@@ -101,5 +100,5 @@ public class ScoringResult implements Serializable, Comparable<ScoringResult> {
 	public String toString() {
 		return "ScoringResult [tagsHash=" + tagsHash + "]";
 	}
-	
+
 }

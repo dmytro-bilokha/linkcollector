@@ -9,8 +9,10 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -24,7 +26,6 @@ import javax.json.JsonArray;
 import javax.json.Json;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -102,12 +103,23 @@ public class SearcherBean {
 		if (!gotWebLinksFromCache || scoredResults.isEmpty()) {
 			scoredResults = new ArrayList<>(webLinks.size());
 			QueryTag[] tagsArray = tags.getTagsArray();
-			for (WebResult wr : webLinks) {
-				int score = scorer.determineScore(tagsArray, wr);
-				ScoringResult sr = new ScoringResult(tagsHash, wr, score);
-				scoredResults.add(sr);
-				em.persist(sr);
-			}
+			List<Future<ScoringResult>> asyncScores = new LinkedList<>();
+			for (WebResult wr : webLinks)
+				asyncScores.add(scorer.determineScore(tagsArray, wr));
+			do {
+				Iterator<Future<ScoringResult>> iterator = asyncScores
+						.iterator();
+				while (iterator.hasNext()) {
+					Future<ScoringResult> fscore = iterator.next();
+					if (fscore.isDone()) {
+						ScoringResult sr = fscore.get();
+						sr.setTagsHash(tagsHash);
+						scoredResults.add(sr);
+						em.persist(sr);
+						iterator.remove();
+					}
+				}
+			} while (!asyncScores.isEmpty());
 			Collections.sort(scoredResults);
 		}
 		return scoredResults;
