@@ -8,3 +8,7 @@ AzureKey=ENCODE_YOUR_AZURE_API_KEY_AND_PUT_IT_HERE
 ConnectTimeout=10000
 #Timeout for reading data from Azure server, ms
 ReaderTimeout=10000
+#Timeout for scoring webpages, ms
+ScoringTimeout=20000
+#Time for keeping query results in database, hours
+KeepQueryHours=200

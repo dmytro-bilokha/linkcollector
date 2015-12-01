@@ -6,12 +6,14 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "SEARCH_QUERY")
+@NamedNativeQuery(name = "SearchQuery.deleteOutdated", query = "DELETE FROM SEARCH_QUERY WHERE TIME_PERSIST < SUBDATE(NOW(), INTERVAL ? HOUR);")
 public class SearchQuery implements Serializable {
 	private static final long serialVersionUID = 1L;
 
