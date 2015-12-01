@@ -41,7 +41,7 @@ import bilokhado.linkcollector.entity.WebResult;
 public class SearcherBean {
 	private static final Logger logger = Logger
 			.getLogger("bilokhado.linkcollector.ejb.SearcherBean");
-	private static String AZURE_URL_PATTERN = "https://api.datamarket.azure.com/Bing/Search/v1/Web?Options=%%27DisableLocationDetection%%27&$top=5&$format=json&Query=%%27%s%%27";
+	private static String AZURE_URL_PATTERN = "https://api.datamarket.azure.com/Bing/Search/v1/Web?Options=%%27DisableLocationDetection%%27&$top=50&$format=json&Query=%%27%s%%27";
 	private static Pattern WHITESPACES = Pattern.compile("\\s+");
 	@EJB
 	private ConfigBean config;
@@ -51,6 +51,7 @@ public class SearcherBean {
 	EntityManager em;
 	private String azureKeyEnc;
 	private int connectTimeout, readerTimeout;
+	private long scoringTimeout;
 
 	@PostConstruct
 	private void init() {
@@ -59,6 +60,8 @@ public class SearcherBean {
 				.getConfigValue("ConnectTimeout"));
 		readerTimeout = Integer
 				.parseInt(config.getConfigValue("ReaderTimeout"));
+		scoringTimeout = Long
+				.parseLong(config.getConfigValue("ScoringTimeout"))*1000000;
 	}
 
 	public String normalizeQuery(String queryText) {
@@ -106,6 +109,7 @@ public class SearcherBean {
 			List<Future<ScoringResult>> asyncScores = new LinkedList<>();
 			for (WebResult wr : webLinks)
 				asyncScores.add(scorer.determineScore(tagsArray, wr));
+			long startTime = System.nanoTime();
 			do {
 				Iterator<Future<ScoringResult>> iterator = asyncScores
 						.iterator();
@@ -119,7 +123,7 @@ public class SearcherBean {
 						iterator.remove();
 					}
 				}
-			} while (!asyncScores.isEmpty());
+			} while (!asyncScores.isEmpty() && System.nanoTime() - startTime < scoringTimeout);
 			Collections.sort(scoredResults);
 		}
 		return scoredResults;

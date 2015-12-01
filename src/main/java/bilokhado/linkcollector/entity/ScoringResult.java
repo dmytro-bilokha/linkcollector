@@ -61,8 +61,9 @@ public class ScoringResult implements Serializable, Comparable<ScoringResult> {
 	public int compareTo(ScoringResult other) {
 		if (this.score > other.getScore())
 			return -1;
-		else
+		if (this.score < other.getScore())
 			return 1;
+		return 0;
 	}
 
 	@Override
