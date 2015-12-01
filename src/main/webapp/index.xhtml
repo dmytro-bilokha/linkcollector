@@ -48,10 +48,12 @@
 							action="#{searchDataBean.addTag}" styleClass="input-button"
 							id="addtag">
 							<f:param name="cid" value="#{searchDataBean.conversationId}" />
-							<f:ajax execute="tagtext tagweight" render="wmsg tablepanel" />
+							<f:ajax execute="tagtext tagweight"
+								render="tagtext tagweight wmsg tablepanel search" />
 						</h:commandButton>
-						<h:commandButton value="Search" action="#{searchDataBean.gotoSearch}" styleClass="input-button"
-							id="search">
+						<h:commandButton value="Search"
+							action="#{searchDataBean.gotoSearch}" styleClass="input-button"
+							disabled="#{empty searchDataBean.tags.tags}" id="search">
 							<f:param name="cid" value="#{searchDataBean.conversationId}" />
 							<f:ajax execute="searchquery" render="qmsg" />
 						</h:commandButton>
@@ -121,7 +123,7 @@
 								action="#{searchDataBean.removeTag(tag)}"
 								styleClass="tags-table-link" id="remove">
 								<f:param name="cid" value="#{searchDataBean.conversationId}" />
-								<f:ajax execute="tablepanel" render="tablepanel" />
+								<f:ajax execute="tablepanel" render="tablepanel search" />
 							</h:commandLink>
 						</h:column>
 					</h:dataTable>

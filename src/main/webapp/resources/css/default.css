@@ -89,6 +89,11 @@ div.navbar a:hover, a:active {
     background-color: #ffff99;
 }
 
+.input-button:disabled {
+    color: #999999;
+    background-color: #aaaaaa;
+}
+
 div.copyright {
     width: 1000px;
     background-color: green;

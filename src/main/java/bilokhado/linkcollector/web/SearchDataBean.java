@@ -21,7 +21,7 @@ public class SearchDataBean implements Serializable {
 	private Conversation conversation;
 	@EJB
 	private ConfigBean config;
-	
+
 	private String searchQuery;
 	private String tagText;
 	private Integer tagWeight;
@@ -33,16 +33,20 @@ public class SearchDataBean implements Serializable {
 	private void beginConversation() {
 		if (conversation.isTransient()) {
 			conversation.begin();
-			conversation.setTimeout(1000*Long.parseLong(config.getConfigValue("ConversationTimeout")));
+			conversation.setTimeout(1000 * Long.parseLong(config
+					.getConfigValue("ConversationTimeout")));
 		}
 	}
-	
+
 	public String gotoSearch() {
-		return "result?faces-redirect=true&amp;q=" + searchQuery + "&amp;tags=" + tags.toString();
+		return "result?faces-redirect=true&amp;q=" + searchQuery + "&amp;tags="
+				+ tags.toString();
 	}
-	
+
 	public void addTag() {
 		tags.add(new QueryTag(tagText, tagWeight));
+		tagWeight = null;
+		tagText = null;
 	}
 
 	public void removeTag(QueryTag tag) {
