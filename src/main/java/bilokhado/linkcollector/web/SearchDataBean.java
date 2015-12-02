@@ -22,6 +22,8 @@ public class SearchDataBean implements Serializable {
 	@EJB
 	private ConfigBean config;
 
+	private String vpSearchQuery;
+	private TagsList vpTagsList;
 	private String searchQuery;
 	private String tagText;
 	private Integer tagWeight;
@@ -37,8 +39,18 @@ public class SearchDataBean implements Serializable {
 					.getConfigValue("ConversationTimeout")));
 		}
 	}
+	
+	public void onload() {
+		if(vpSearchQuery != null)
+			searchQuery = vpSearchQuery;
+		if(vpTagsList != null)
+			tags = vpTagsList;
+	}
 
 	public String gotoSearch() {
+		if(!conversation.isTransient())
+			conversation.end();
+		//return "processing?faces-redirect=true";
 		return "result?faces-redirect=true&amp;q=" + searchQuery + "&amp;tags="
 				+ tags.toString();
 	}
@@ -97,4 +109,20 @@ public class SearchDataBean implements Serializable {
 		return conversation.getId();
 	}
 
+	public String getVpSearchQuery() {
+		return vpSearchQuery;
+	}
+
+	public void setVpSearchQuery(String vpSearchQuery) {
+		this.vpSearchQuery = vpSearchQuery;
+	}
+
+	public TagsList getVpTagsList() {
+		return vpTagsList;
+	}
+
+	public void setVpTagsList(TagsList vpTagsList) {
+		this.vpTagsList = vpTagsList;
+	}
+	
 }

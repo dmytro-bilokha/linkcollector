@@ -29,9 +29,13 @@ public class TagsListConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object tagsList) {
-		// This converter is for viewParams, so conversion object -> string is
-		// not needed
-		return "";
+		if (tagsList instanceof TagsList) {
+			return ((TagsList) tagsList).toString();
+		}
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+				"Unsupported object type to convert",
+				"Unsupported object type to convert");
+		throw new ConverterException(message);
 	}
 
 }

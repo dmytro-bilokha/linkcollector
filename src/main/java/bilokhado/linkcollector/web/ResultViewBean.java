@@ -21,7 +21,7 @@ public class ResultViewBean implements Serializable {
 	private String searchQuery;
 	private TagsList tags;
 	private List<ScoringResult> searchResult;
-
+	private boolean loaded = false;
 	@EJB
 	SearcherBean searcher;
 
@@ -32,8 +32,9 @@ public class ResultViewBean implements Serializable {
 			FacesMessage message = new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
-			// TODO: add code for dialing with searchResult == null
 		}
+		loaded = true;
+		System.out.println("Heavy guy called!");
 	}
 
 	public String getSearchQuery() {
@@ -56,4 +57,12 @@ public class ResultViewBean implements Serializable {
 		return searchResult;
 	}
 
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+	
 }

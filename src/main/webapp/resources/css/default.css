@@ -251,3 +251,9 @@ p.notags-message {
 .display-url {
     color: #1b7639;
 }
+
+.img-loading {
+display: block;
+margin-left: auto;
+margin-right: auto;
+}

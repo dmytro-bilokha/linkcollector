@@ -7,58 +7,73 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:metadata>
 	<f:viewParam name="q" value="#{resultViewBean.searchQuery}" id="query"
-		required="true"
+		required="true" maxlength="150"
 		requiredMessage="Malformed URL - search query is required" />
 	<f:viewParam name="tags" value="#{resultViewBean.tags}" id="tags"
 		required="true"
 		requiredMessage="Malformed URL - tags table is required" />
-	<f:viewAction action="#{resultViewBean.onload}" />
 </f:metadata>
 
 <h:body>
 	<ui:composition template="./template.xhtml">
 		<ui:define name="content">
-			<p>
-				<h:message for="query" styleClass="error-message" />
-			</p>
-			<p>
-				<h:message for="tags" styleClass="error-message" />
-			</p>
-			<p>
-				<h:messages style="color:red" layout="table" />
-			</p>
-			<p>Your query is: "#{resultViewBean.searchQuery}"</p>
-			<p>Tags table is: "#{resultViewBean.tags}"</p>
-			<h:dataTable value="#{resultViewBean.searchResult}" var="srt"
-				styleClass="results-table" rowClasses="results-table-row"
-				columnClasses="results-table-1-col,results-table-2-col">
-				<h:column>
-					<p>
-						<h:outputText value="Score:" />
-					</p>
-					<p>
-						<h:outputText value="#{srt.score}" />
-					</p>
-				</h:column>
-				<h:column>
-					<p>
-						<h:outputLink value="#{srt.scoredWebResult.url}">
+			<h:messages styleClass="error-message" layout="table" />
+			<ui:fragment rendered="#{not resultViewBean.loaded}">
+				<p class="tags-table-caption">Retrieving data...</p>
+				<h:graphicImage library="images" name="preloader.gif"
+					alt="Retrieving data..." styleClass="img-loading" />
+			</ui:fragment>
+			<ui:fragment rendered="#{resultViewBean.loaded}">
+				<p>
+					<h:link value="You can edit your search parameters here"
+						outcome="index" includeViewParams="true" />
+				</p>
+
+				<p>Your query is: "#{resultViewBean.searchQuery}"</p>
+				<p>Tags table is: "#{resultViewBean.tags}"</p>
+				<h:dataTable value="#{resultViewBean.searchResult}" var="srt"
+					styleClass="results-table" rowClasses="results-table-row"
+					columnClasses="results-table-1-col,results-table-2-col">
+					<h:column>
+						<p>
+							<h:outputText value="Score:" />
+						</p>
+						<p>
+							<h:outputText value="#{srt.score}" />
+						</p>
+					</h:column>
+					<h:column>
+						<p>
+							<h:outputLink value="#{srt.scoredWebResult.url}">
 						#{srt.scoredWebResult.title}
 						</h:outputLink>
-					</p>
-					<p>
-						<h:outputText value="#{srt.scoredWebResult.displayUrl}"
-							styleClass="display-url" />
-					</p>
-					<p>
-						<h:outputText value="#{srt.scoredWebResult.description}" />
-					</p>
-				</h:column>
-			</h:dataTable>
-			<h:dataTable value="#{resultViewBean.tags.tags}" var="tag">
-				<h:column>#{tag.tagText}</h:column>
-				<h:column>#{tag.tagWeight}</h:column>
-			</h:dataTable>
+						</p>
+						<p>
+							<h:outputText value="#{srt.scoredWebResult.displayUrl}"
+								styleClass="display-url" />
+						</p>
+						<p>
+							<h:outputText value="#{srt.scoredWebResult.description}" />
+						</p>
+					</h:column>
+				</h:dataTable>
+				<h:dataTable value="#{resultViewBean.tags.tags}" var="tag">
+					<h:column>#{tag.tagText}</h:column>
+					<h:column>#{tag.tagWeight}</h:column>
+				</h:dataTable>
+			</ui:fragment>
+			<h:form id="hidden" style="display:none">
+				<h:commandLink id="link" action="#{resultViewBean.onload}">
+					<f:ajax render="@all" />
+				</h:commandLink>
+			</h:form>
+		</ui:define>
+		<ui:define name="inhead">
+			<script>
+				window.onload = function() {
+					document.getElementById('hidden:link').onclick();
+				}
+			</script>
 		</ui:define>
 	</ui:composition>
 </h:body>

@@ -5,6 +5,12 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:metadata>
+	<f:viewParam name="q" value="#{searchDataBean.vpSearchQuery}"
+		maxlength="150" id="query" />
+	<f:viewParam name="tags" value="#{searchDataBean.vpTagsList}" id="tags" />
+	<f:viewAction action="#{searchDataBean.onload}" />
+</f:metadata>
 
 <h:body>
 	<ui:composition template="./template.xhtml">
@@ -15,8 +21,9 @@
 						<tr>
 							<td><h:outputText value="Search query: " /></td>
 							<td><h:inputText value="#{searchDataBean.searchQuery}"
-									title="String for passing to search engines" style="width:99%"
-									required="true" requiredMessage="Please, provide search query"
+									maxlength="150" title="String for passing to search engines"
+									style="width:99%" required="true"
+									requiredMessage="Please, provide search query"
 									autocomplete="off" id="searchquery" /></td>
 						</tr>
 						<tr class="error-message">
