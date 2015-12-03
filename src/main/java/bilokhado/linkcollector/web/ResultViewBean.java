@@ -34,7 +34,6 @@ public class ResultViewBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 		loaded = true;
-		System.out.println("Heavy guy called!");
 	}
 
 	public String getSearchQuery() {

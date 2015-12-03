@@ -24,16 +24,23 @@
 					alt="Retrieving data..." styleClass="img-loading" />
 			</ui:fragment>
 			<ui:fragment rendered="#{resultViewBean.loaded}">
-				<p>
-					<h:link value="You can edit your search parameters here"
-						outcome="index" includeViewParams="true" />
+				<p class="edit-link">
+					<h:link value="Edit search" outcome="index" styleClass="edit-link"
+						includeViewParams="true" />
 				</p>
-
-				<p>Your query is: "#{resultViewBean.searchQuery}"</p>
-				<p>Tags table is: "#{resultViewBean.tags}"</p>
-				<h:dataTable value="#{resultViewBean.searchResult}" var="srt"
+				<h:panelGroup id="notagsmsg"
+					rendered="#{empty resultViewBean.searchResult}">
+					<p class="notags-message">
+						<h:outputText value="Not found any result..."
+							styleClass="notags-message" />
+					</p>
+				</h:panelGroup>
+				<h:dataTable value="#{resultViewBean.searchResult}"
+					rendered="#{not empty resultViewBean.searchResult}" var="srt"
 					styleClass="results-table" rowClasses="results-table-row"
+					captionClass="tags-table-caption"
 					columnClasses="results-table-1-col,results-table-2-col">
+					<f:facet name="caption">Search results for "#{resultViewBean.searchQuery}"</f:facet>
 					<h:column>
 						<p>
 							<h:outputText value="Score:" />
@@ -56,10 +63,6 @@
 							<h:outputText value="#{srt.scoredWebResult.description}" />
 						</p>
 					</h:column>
-				</h:dataTable>
-				<h:dataTable value="#{resultViewBean.tags.tags}" var="tag">
-					<h:column>#{tag.tagText}</h:column>
-					<h:column>#{tag.tagWeight}</h:column>
 				</h:dataTable>
 			</ui:fragment>
 			<h:form id="hidden" style="display:none">

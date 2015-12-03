@@ -77,6 +77,7 @@ div.navbar a:link, a:visited {
 div.navbar a:hover, a:active {
     color: #eeeff0;
     background-color: #5f6975;
+    cursor: default;
 }
 
 .navbar {
@@ -91,7 +92,7 @@ div.navbar a:hover, a:active {
 
 .input-button:disabled {
     color: #999999;
-    background-color: #aaaaaa;
+    background-color: #e5e5e5;
 }
 
 div.copyright {
@@ -202,6 +203,7 @@ table.inputform td {
 
 .tags-table-link:hover {
     color: #ff99ff;
+    cursor: default;
 }
 
 p.notags-message {
@@ -241,11 +243,11 @@ p.notags-message {
 }
 
 .results-table-2-col a:visited {
-	color: #69059b;
+    color: #69059b;
 }
 
 .results-table-2-col a:hover {
-	color: #0089b7;
+    color: #0089b7;
 }
 
 .display-url {
@@ -253,7 +255,28 @@ p.notags-message {
 }
 
 .img-loading {
-display: block;
-margin-left: auto;
-margin-right: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p.edit-link {
+    text-align: right;
+    padding-right: 1em;
+    display: block;
+}
+
+.edit-link a {
+    color: #555555;
+    text-decoration: none;
+    padding: 10px;
+} 
+
+.edit-link a:hover {
+    background-color: #e8e8e8;
+    color: black;
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 9px;
+    cursor: default;
 }
