@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="content">
+			<div class="just-text">
+				<h2>Using Linkcollector</h2>
+				<ol>
+					<li>On the homepage enter the search query.</li>
+					<li>Fill the tags table.</li>
+					<li>Press <em>Search</em> button.
+					</li>
+					<li>Linkcollector will send your search query to the Bing
+						search engine. Eache result from the Bing will be scanned for
+						presents of the tag's text. If tag's text is present on the result
+						page, the page score value will be increased on the tag's weight.</li>
+					<li>All processed Bing results will be shown sorted by the
+						score value.</li>
+					<li>You can click <em>Edit search</em> link to edit search
+						parameters and repeat it. Or you can just click <em>HOME</em> to
+						accomplish a new search.
+					</li>
+				</ol>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

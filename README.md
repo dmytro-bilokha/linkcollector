@@ -20,7 +20,7 @@ in sql-scripts.
  * Deployed JDBC driver for MySQL. Author used the [official JDBC driver
  for MySQL](http://dev.mysql.com/downloads/connector/j/).
 
- * Maven with access to the repository (linkcollector depends from the Jsoup library).
+ * Maven with access to the repository (linkcollector depends from the [Jsoup library](http://jsoup.org)).
 
 ## Environment Configuration
 

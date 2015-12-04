@@ -280,3 +280,19 @@ p.edit-link {
     padding: 9px;
     cursor: default;
 }
+
+h2 {
+    text-decoration: underline;
+}
+
+div.just-text {
+    margin: 1px 15px 1px 15px;
+}
+
+div.just-text li {
+    padding: 5px;
+}
+
+p span.displaynone { 
+    display:none; 
+}
