@@ -37,22 +37,64 @@ import bilokhado.linkcollector.entity.SearchQuery;
 import bilokhado.linkcollector.entity.TagsList;
 import bilokhado.linkcollector.entity.WebResult;
 
+/**
+ * A bean to find web pages with Bing search engine and store they in database.
+ */
 @Stateless
 public class SearcherBean {
+
+	/**
+	 * Logger for errors logging.
+	 */
 	private static final Logger logger = Logger
 			.getLogger("bilokhado.linkcollector.ejb.SearcherBean");
+
+	/**
+	 * String pattern for Bing search engine/
+	 */
 	private static String AZURE_URL_PATTERN = "https://api.datamarket.azure.com/Bing/Search/v1/Web?Options=%%27DisableLocationDetection%%27&$top=50&$format=json&Query=%%27%s%%27";
+
+	/**
+	 * Regexp pattern for deduplicating white spaces and splitting query.
+	 */
 	private static Pattern WHITESPACES = Pattern.compile("\\s+");
+
+	/**
+	 * Reference to {@code ConfigBean} bean for reading timeout values.
+	 */
 	@EJB
 	private ConfigBean config;
+
+	/**
+	 * Reference to {@code ScoringBean} bean for scoring web pages.
+	 */
 	@EJB
 	private ScoringBean scorer;
+
+	/**
+	 * Entity manager for access database.
+	 */
 	@PersistenceContext
 	EntityManager em;
+
+	/**
+	 * Encoded MS Azure key from configuration file.
+	 */
 	private String azureKeyEnc;
+
+	/**
+	 * Connection and reading data from web timeouts.
+	 */
 	private int connectTimeout, readerTimeout;
+
+	/**
+	 * Timeout for the whole scoring process.
+	 */
 	private long scoringTimeout;
 
+	/**
+	 * Gets configuration options and stores in bean's variables.
+	 */
 	@PostConstruct
 	private void init() {
 		azureKeyEnc = config.getConfigValue("AzureKey");
@@ -61,13 +103,28 @@ public class SearcherBean {
 		readerTimeout = Integer
 				.parseInt(config.getConfigValue("ReaderTimeout"));
 		scoringTimeout = Long
-				.parseLong(config.getConfigValue("ScoringTimeout"))*1000000;
+				.parseLong(config.getConfigValue("ScoringTimeout")) * 1000000;
 	}
 
+	/**
+	 * Normalizes query via replacing all white spaces with just space and
+	 * converting string to lower case.
+	 * 
+	 * @param queryText
+	 *            the query to normalize
+	 * @return normalized query string
+	 */
 	public String normalizeQuery(String queryText) {
 		return WHITESPACES.matcher(queryText).replaceAll(" ").toLowerCase();
 	}
 
+	/**
+	 * Calculates query hash
+	 * 
+	 * @param query
+	 *            the query string to process
+	 * @return the calculated hash
+	 */
 	public long calculateQueryHash(String query) {
 		String words[] = WHITESPACES.split(query);
 		long hash = 0;
@@ -80,6 +137,19 @@ public class SearcherBean {
 		return hash;
 	}
 
+	/**
+	 * Obtains web pages from the Bing search, scores it, stores in database (if
+	 * new).
+	 * 
+	 * @param query
+	 *            the query string for the search engine
+	 * @param tags
+	 *            the tags list for scoring web pages
+	 * @return list of scored results
+	 * @throws Exception
+	 *             if data is malformed, connection failure, JSON parsing errors
+	 *             and so on
+	 */
 	public List<ScoringResult> search(String query, TagsList tags)
 			throws Exception {
 		String normalizedQuery = normalizeQuery(query);
@@ -123,13 +193,27 @@ public class SearcherBean {
 						iterator.remove();
 					}
 				}
-			} while (!asyncScores.isEmpty() && System.nanoTime() - startTime < scoringTimeout);
+			} while (!asyncScores.isEmpty()
+					&& System.nanoTime() - startTime < scoringTimeout);
 			Collections.sort(scoredResults);
 		}
 		return scoredResults;
 
 	}
 
+	/**
+	 * Asks the Bing search engine, returns parsed search results, stores it in
+	 * the database.
+	 * 
+	 * @param query
+	 *            the query string to search
+	 * @param queryObj
+	 *            the query object
+	 * @return list of search results
+	 * @throws Exception
+	 *             if URL encoding, connecting or reading web page, JSON parsing
+	 *             errors occur
+	 */
 	public List<WebResult> findAndSave(String query, SearchQuery queryObj)
 			throws Exception {
 		List<WebResult> searchResult = new LinkedList<>();

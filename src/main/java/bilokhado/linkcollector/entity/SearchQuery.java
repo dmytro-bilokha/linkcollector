@@ -11,6 +11,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * A class representing search query.
+ */
 @Entity
 @Table(name = "SEARCH_QUERY")
 @NamedNativeQuery(name = "SearchQuery.deleteOutdated", query = "DELETE FROM SEARCH_QUERY WHERE TIME_PERSIST < SUBDATE(NOW(), INTERVAL ? HOUR);")

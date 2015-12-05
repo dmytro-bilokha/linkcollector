@@ -1,5 +1,8 @@
 package bilokhado.linkcollector.entity;
 
+/**
+ * A class representing query tag for scoring web results.
+ */
 public class QueryTag {
 
 	private String tagText;

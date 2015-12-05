@@ -14,15 +14,34 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ConcurrencyManagement;
 
+/**
+ * A bean to read, store, and return on demand configuration options.
+ *
+ */
 @ConcurrencyManagement(BEAN)
 @Singleton
 @Startup
 public class ConfigBean {
+
+	/**
+	 * Path to configuration file.
+	 */
 	private static final String CONFIG_FILE = "/config";
+
+	/**
+	 * Logger for errors logging.
+	 */
 	private static final Logger logger = Logger
 			.getLogger("bilokhado.linkcollector.ejb.ConfigBean");
+
+	/**
+	 * Internal map object to store configuration properties.
+	 */
 	private final Map<String, String> config = new ConcurrentHashMap<>();
 
+	/**
+	 * Reads configuration file and stores options in internal map.
+	 */
 	@PostConstruct
 	private void init() {
 		Properties props = new Properties();
@@ -41,6 +60,15 @@ public class ConfigBean {
 		}
 	}
 
+	/**
+	 * Obtains configuration option's value from the internal map.
+	 * 
+	 * @param name
+	 *            the name of parameter to get
+	 * @return options string value
+	 * @throws EJBException
+	 *             if the parameter is not found
+	 */
 	public String getConfigValue(String name) {
 		String result = config.get(name);
 		if (result == null) {

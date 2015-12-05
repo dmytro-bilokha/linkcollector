@@ -13,18 +13,48 @@ import bilokhado.linkcollector.ejb.SearcherBean;
 import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.TagsList;
 
+/**
+ * A backing bean for the results page.
+ */
 @Named
 @RequestScoped
 public class ResultViewBean implements Serializable {
+
+	/**
+	 * Version for serialization.
+	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Search query string.
+	 */
 	private String searchQuery;
+
+	/**
+	 * Tags list.
+	 */
 	private TagsList tags;
+
+	/**
+	 * The list of the scoring results.
+	 */
 	private List<ScoringResult> searchResult;
+
+	/**
+	 * Flag indicating page loading. Used to display loading image.
+	 */
 	private boolean loaded = false;
+
+	/**
+	 * Reference to EJB for search and score business logic.
+	 */
 	@EJB
 	SearcherBean searcher;
 
+	/**
+	 * Calls search and score business logic method and stores results for
+	 * showing on web page.
+	 */
 	public void onload() {
 		try {
 			searchResult = searcher.search(searchQuery, tags);
@@ -60,8 +90,4 @@ public class ResultViewBean implements Serializable {
 		return loaded;
 	}
 
-	public void setLoaded(boolean loaded) {
-		this.loaded = loaded;
-	}
-	
 }

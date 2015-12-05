@@ -12,9 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+/**
+ * A class representing result of web search (web page).
+ */
 @Entity
 @Table(name = "WEB_RESULT")
-@NamedQuery(name = "WebResult.findByQueryHash", query="SELECT wr FROM WebResult wr WHERE wr.searchQuery.queryHash = :hash")
+@NamedQuery(name = "WebResult.findByQueryHash", query = "SELECT wr FROM WebResult wr WHERE wr.searchQuery.queryHash = :hash")
 public class WebResult implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -52,8 +55,8 @@ public class WebResult implements Serializable {
 		this.searchQuery = searchQuery;
 	}
 
-	public WebResult(SearchQuery searchQuery, String title, String url, String displayUrl,
-			String description) {
+	public WebResult(SearchQuery searchQuery, String title, String url,
+			String displayUrl, String description) {
 		this.searchQuery = searchQuery;
 		this.title = title;
 		this.url = url;
@@ -97,7 +100,8 @@ public class WebResult implements Serializable {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = prime + ((searchQuery == null) ? 0 : searchQuery.hashCode());
+		int result = prime
+				+ ((searchQuery == null) ? 0 : searchQuery.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}

@@ -8,6 +8,9 @@ import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+/**
+ * A JSF custom validator class. Used to validate query tag in home page.
+ */
 @FacesValidator("tagInValidator")
 public class TagInValidator implements Validator {
 

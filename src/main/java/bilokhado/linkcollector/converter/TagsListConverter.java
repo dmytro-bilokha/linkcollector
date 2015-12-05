@@ -9,13 +9,20 @@ import javax.faces.convert.FacesConverter;
 
 import bilokhado.linkcollector.entity.TagsList;
 
+/**
+ * A JSF converter for {@code TagsList} class.
+ *
+ */
 @FacesConverter(forClass = TagsList.class)
 public class TagsListConverter implements Converter {
-	private TagsList tags = new TagsList();
 
+	/**
+	 * Converts {@code String} to {@code TagsList}.
+	 */
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component,
 			String tagsEncodedJson) {
+		TagsList tags = new TagsList();
 		try {
 			tags.populateFromUrl(tagsEncodedJson);
 			return tags;
@@ -26,6 +33,11 @@ public class TagsListConverter implements Converter {
 		}
 	}
 
+	/**
+	 * Converts {@code TagsList} {@code String}.
+	 * 
+	 * @see bilokhado.linkcollector.entity.TagsList#toString()
+	 */
 	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object tagsList) {

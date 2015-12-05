@@ -16,6 +16,9 @@ import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 
+/**
+ * A class representing list of tags for web pages scoring.
+ */
 @Dependent
 public class TagsList implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -36,6 +39,10 @@ public class TagsList implements Serializable {
 		tags.remove(tag);
 	}
 
+	/**
+	 * Normalizes tags list via removing tags with zero weight, deleting
+	 * duplicates and converting tags text to lower case.
+	 */
 	private void normalize() {
 		Map<String, Boolean> seen = new HashMap<>();
 		ListIterator<QueryTag> iterator = tags.listIterator(tags.size());
@@ -49,6 +56,11 @@ public class TagsList implements Serializable {
 		}
 	}
 
+	/**
+	 * Calculates hash for storing in database and determining uniqueness.
+	 * 
+	 * @return the calculated hash
+	 */
 	public long calculateHash() {
 		long hash = 1;
 		for (QueryTag t : tags)
@@ -56,11 +68,25 @@ public class TagsList implements Serializable {
 		return hash;
 	}
 
+	/**
+	 * Transforms internal query list to query tags array.
+	 * 
+	 * @return the array obtained from internal query list
+	 */
 	public QueryTag[] getTagsArray() {
 		QueryTag[] array = new QueryTag[tags.size()];
 		return tags.toArray(array);
 	}
 
+	/**
+	 * Populates query tags list from given JSON string. All unknown tags are
+	 * ignored.
+	 * 
+	 * @param jsonData
+	 *            the string with JSON data
+	 * @throws Exception
+	 *             if JSON creation error occurs
+	 */
 	public void populateFromUrl(String jsonData) throws Exception {
 		try (JsonParser parser = Json.createParser(new StringReader(jsonData))) {
 			String key = null;
@@ -94,6 +120,10 @@ public class TagsList implements Serializable {
 		normalize();
 	}
 
+	/**
+	 * Converts query tags list to JSON string and returns it. In case of
+	 * conversion errors, returns {@code null}.
+	 */
 	@Override
 	public String toString() {
 		StringWriter buffer = new StringWriter();

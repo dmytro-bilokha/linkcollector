@@ -10,6 +10,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+/**
+ * A class representing result of the web page scoring.
+ */
 @Entity
 @Table(name = "SCORING_RESULT")
 @NamedQuery(name = "ScoringResult.findByTagsHash", query = "SELECT sr FROM ScoringResult sr WHERE sr.tagsHash = :hash ORDER BY sr.score DESC")
