@@ -57,10 +57,9 @@ public class ResultViewBean implements Serializable {
 	 */
 	public void onload() {
 		try {
-			searchResult = searcher.search(searchQuery, tags);
+			searchResult = searcher.search(searchQuery, tags.clone());
 		} catch (Exception e) {
-			FacesMessage message = new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage());
 			FacesContext.getCurrentInstance().addMessage(null, message);
 		}
 		loaded = true;

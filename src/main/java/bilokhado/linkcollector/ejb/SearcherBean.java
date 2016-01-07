@@ -148,6 +148,7 @@ public class SearcherBean {
 	 */
 	public List<ScoringResult> search(String query, TagsList tags) throws Exception {
 		String normalizedQuery = normalizeQuery(query);
+		tags.normalize();
 		long queryHash = calculateQueryHash(normalizedQuery);
 		TypedQuery<WebResult> dbQuery = em.createNamedQuery("WebResult.findByQueryHash", WebResult.class);
 		List<WebResult> webLinks = dbQuery.setParameter("hash", queryHash).getResultList();
