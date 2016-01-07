@@ -34,12 +34,12 @@ public class TagsListConverter implements Converter {
 	/**
 	 * Converts {@code TagsList} {@code String}.
 	 * 
-	 * @see bilokhado.linkcollector.entity.TagsList#toString()
+	 * @see bilokhado.linkcollector.entity.TagsList#getAsJsonString()
 	 */
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object tagsList) {
 		if (tagsList instanceof TagsList) {
-			return ((TagsList) tagsList).toString();
+			return ((TagsList) tagsList).getAsJsonString();
 		}
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unsupported object type to convert",
 				"Unsupported object type to convert");

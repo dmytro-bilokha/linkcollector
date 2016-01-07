@@ -104,7 +104,7 @@ public class SearchDataBean implements Serializable {
 		if (!conversation.isTransient())
 			conversation.end();
 		return "result?faces-redirect=true&amp;q=" + searchQuery + "&amp;tags="
-				+ tags.toString();
+				+ tags.getAsJsonString();
 	}
 
 	/**
