@@ -33,7 +33,7 @@ data source `java:/MySqlDS`.
 ## Application Configuration
 
 The application configuration options are located in
-`/usr/home/dimon/Java/linkcollector/src/main/webapp/WEB-INF/classes/config`.
+`/src/main/webapp/WEB-INF/classes/config`.
 You should edit the `config.sample` file from sources according to provided
 comments and save it as `config`.
 
@@ -58,3 +58,19 @@ page, the page score value will be increased on the tag's weight.
 6. You can click _Edit search_ link to edit search parameters and repeat it. Or you can 
 just click _HOME_ to accomplish a new search.
 
+## Brief of Technologies Involved
+
+* JSF for front-end HTML generating.
+
+* CDI beans as backing beans for JSF pages.
+
+* EJB beans for business logic.
+
+* [Jsoup library](http://jsoup.org/) for processing HTML of scored web pages.
+
+* JSON processing capabilities for parsing data from the Bing and
+data interchange inside the application.
+
+* JPA for object-relational mapping.
+
+* [MySQL](https://www.mysql.com/) for storing data.
