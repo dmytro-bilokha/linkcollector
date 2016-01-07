@@ -90,7 +90,7 @@ public class TagsList implements Serializable, Cloneable {
 	 * @throws Exception
 	 *             if JSON creation error occurs
 	 */
-	public void populateFromUrl(String jsonData) throws Exception {
+	public void populateFromJson(String jsonData) throws Exception {
 		try (JsonParser parser = Json.createParser(new StringReader(jsonData))) {
 			String key = null;
 			while (parser.hasNext()) {
