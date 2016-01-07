@@ -22,8 +22,7 @@ import javax.json.stream.JsonParser;
 @Dependent
 public class TagsList implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger
-			.getLogger("bilokhado.linkcollector.web.TagsList");
+	private static final Logger logger = Logger.getLogger("bilokhado.linkcollector.web.TagsList");
 
 	private final List<QueryTag> tags = new LinkedList<>();
 
@@ -49,8 +48,7 @@ public class TagsList implements Serializable {
 		while (iterator.hasPrevious()) {
 			QueryTag t = iterator.previous();
 			t.setTagText(t.getTagText().toLowerCase());
-			if (seen.putIfAbsent(t.getTagText(), Boolean.TRUE) != null
-					|| t.getTagWeight() == 0) {
+			if (seen.putIfAbsent(t.getTagText(), Boolean.TRUE) != null || t.getTagWeight() == 0) {
 				iterator.remove();
 			}
 		}
@@ -106,16 +104,13 @@ public class TagsList implements Serializable {
 					break;
 
 				default:
-					logger.log(Level.SEVERE,
-							"Unsupported tag passed in JSON string: "
-									+ jsonData);
+					logger.log(Level.SEVERE, "Unsupported tag passed in JSON string: " + jsonData);
 					break;
 				}
 			}
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error happen while parsing JSON string: "
-					+ jsonData);
-			throw new Exception("Unable to decode tags list from URL");
+			logger.log(Level.SEVERE, "Error happen while parsing JSON string: " + jsonData, e);
+			throw new Exception("Unable to decode tags list from URL", e);
 		}
 		normalize();
 	}
@@ -134,8 +129,7 @@ public class TagsList implements Serializable {
 			jgen.flush();
 			return buffer.toString();
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Unable to encode URL with list of tags: "
-					+ buffer.toString());
+			logger.log(Level.SEVERE, "Unable to encode URL with list of tags: " + buffer.toString(), e);
 			return null;
 		}
 	}

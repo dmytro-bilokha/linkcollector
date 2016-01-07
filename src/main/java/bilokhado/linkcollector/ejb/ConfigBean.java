@@ -31,8 +31,7 @@ public class ConfigBean {
 	/**
 	 * Logger for errors logging.
 	 */
-	private static final Logger logger = Logger
-			.getLogger("bilokhado.linkcollector.ejb.ConfigBean");
+	private static final Logger logger = Logger.getLogger("bilokhado.linkcollector.ejb.ConfigBean");
 
 	/**
 	 * Internal map object to store configuration properties.
@@ -49,10 +48,8 @@ public class ConfigBean {
 			props.load(ConfigBean.class.getResourceAsStream(CONFIG_FILE));
 			logger.log(Level.INFO, "Properties file loaded successfully");
 		} catch (Exception ex) {
-			logger.log(Level.SEVERE, "Unable to load properties file: "
-					+ CONFIG_FILE);
-			throw new EJBException("Could not load config file \""
-					+ CONFIG_FILE + "\"", ex);
+			logger.log(Level.SEVERE, "Unable to load properties file: " + CONFIG_FILE, ex);
+			throw new EJBException("Could not load config file \"" + CONFIG_FILE + "\"", ex);
 		}
 		for (Enumeration<?> e = props.propertyNames(); e.hasMoreElements();) {
 			String name = (String) e.nextElement();

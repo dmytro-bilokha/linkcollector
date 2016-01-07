@@ -26,8 +26,7 @@ public class ScoringBean {
 	/**
 	 * Logger for errors logging.
 	 */
-	private static final Logger logger = Logger
-			.getLogger("bilokhado.linkcollector.ejb.ScoringBean");
+	private static final Logger logger = Logger.getLogger("bilokhado.linkcollector.ejb.ScoringBean");
 
 	/**
 	 * Reference to {@code ConfigBean} bean for reading timeout value.
@@ -45,8 +44,7 @@ public class ScoringBean {
 	 */
 	@PostConstruct
 	private void init() {
-		connectTimeout = Integer.parseInt(config
-				.getConfigValue("ConnectTimeout"));
+		connectTimeout = Integer.parseInt(config.getConfigValue("ConnectTimeout"));
 	}
 
 	/**
@@ -68,7 +66,7 @@ public class ScoringBean {
 		try {
 			doc = Jsoup.connect(link).timeout(connectTimeout).get();
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Unable to get html from url: " + link);
+			logger.log(Level.SEVERE, "Unable to get html from url: " + link, e);
 			return new AsyncResult<>(new ScoringResult(wr, 0));
 		}
 		String pageText = doc.body().text().toLowerCase();

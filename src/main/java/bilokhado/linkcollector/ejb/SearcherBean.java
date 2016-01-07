@@ -46,8 +46,7 @@ public class SearcherBean {
 	/**
 	 * Logger for errors logging.
 	 */
-	private static final Logger logger = Logger
-			.getLogger("bilokhado.linkcollector.ejb.SearcherBean");
+	private static final Logger logger = Logger.getLogger("bilokhado.linkcollector.ejb.SearcherBean");
 
 	/**
 	 * String pattern for Bing search engine/
@@ -98,12 +97,9 @@ public class SearcherBean {
 	@PostConstruct
 	private void init() {
 		azureKeyEnc = config.getConfigValue("AzureKey");
-		connectTimeout = Integer.parseInt(config
-				.getConfigValue("ConnectTimeout"));
-		readerTimeout = Integer
-				.parseInt(config.getConfigValue("ReaderTimeout"));
-		scoringTimeout = Long
-				.parseLong(config.getConfigValue("ScoringTimeout")) * 1000000;
+		connectTimeout = Integer.parseInt(config.getConfigValue("ConnectTimeout"));
+		readerTimeout = Integer.parseInt(config.getConfigValue("ReaderTimeout"));
+		scoringTimeout = Long.parseLong(config.getConfigValue("ScoringTimeout")) * 1000000;
 	}
 
 	/**
@@ -150,14 +146,11 @@ public class SearcherBean {
 	 *             if data is malformed, connection failure, JSON parsing errors
 	 *             and so on
 	 */
-	public List<ScoringResult> search(String query, TagsList tags)
-			throws Exception {
+	public List<ScoringResult> search(String query, TagsList tags) throws Exception {
 		String normalizedQuery = normalizeQuery(query);
 		long queryHash = calculateQueryHash(normalizedQuery);
-		TypedQuery<WebResult> dbQuery = em.createNamedQuery(
-				"WebResult.findByQueryHash", WebResult.class);
-		List<WebResult> webLinks = dbQuery.setParameter("hash", queryHash)
-				.getResultList();
+		TypedQuery<WebResult> dbQuery = em.createNamedQuery("WebResult.findByQueryHash", WebResult.class);
+		List<WebResult> webLinks = dbQuery.setParameter("hash", queryHash).getResultList();
 		boolean gotWebLinksFromCache = true;
 		if (webLinks.isEmpty()) {
 			SearchQuery queryObj = new SearchQuery(queryHash);
@@ -168,10 +161,9 @@ public class SearcherBean {
 		List<ScoringResult> scoredResults = null;
 		long tagsHash = tags.calculateHash();
 		if (gotWebLinksFromCache) {
-			TypedQuery<ScoringResult> srQuery = em.createNamedQuery(
-					"ScoringResult.findByTagsHash", ScoringResult.class);
-			scoredResults = srQuery.setParameter("hash", tagsHash)
-					.getResultList();
+			TypedQuery<ScoringResult> srQuery = em.createNamedQuery("ScoringResult.findByTagsHash",
+					ScoringResult.class);
+			scoredResults = srQuery.setParameter("hash", tagsHash).getResultList();
 		}
 		if (!gotWebLinksFromCache || scoredResults.isEmpty()) {
 			scoredResults = new ArrayList<>(webLinks.size());
@@ -181,8 +173,7 @@ public class SearcherBean {
 				asyncScores.add(scorer.determineScore(tagsArray, wr));
 			long startTime = System.nanoTime();
 			do {
-				Iterator<Future<ScoringResult>> iterator = asyncScores
-						.iterator();
+				Iterator<Future<ScoringResult>> iterator = asyncScores.iterator();
 				while (iterator.hasNext()) {
 					Future<ScoringResult> fscore = iterator.next();
 					if (fscore.isDone()) {
@@ -193,8 +184,7 @@ public class SearcherBean {
 						iterator.remove();
 					}
 				}
-			} while (!asyncScores.isEmpty()
-					&& System.nanoTime() - startTime < scoringTimeout);
+			} while (!asyncScores.isEmpty() && System.nanoTime() - startTime < scoringTimeout);
 			Collections.sort(scoredResults);
 		}
 		return scoredResults;
@@ -214,8 +204,7 @@ public class SearcherBean {
 	 *             if URL encoding, connecting or reading web page, JSON parsing
 	 *             errors occur
 	 */
-	public List<WebResult> findAndSave(String query, SearchQuery queryObj)
-			throws Exception {
+	public List<WebResult> findAndSave(String query, SearchQuery queryObj) throws Exception {
 		List<WebResult> searchResult = new LinkedList<>();
 		HttpURLConnection urlcon = null;
 		InputStreamReader stream;
@@ -223,10 +212,9 @@ public class SearcherBean {
 		String azureUrlString;
 
 		try {
-			azureUrlString = String.format(AZURE_URL_PATTERN,
-					URLEncoder.encode(query, "UTF-8"));
+			azureUrlString = String.format(AZURE_URL_PATTERN, URLEncoder.encode(query, "UTF-8"));
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Unable to url-encode query: " + query);
+			logger.log(Level.SEVERE, "Unable to url-encode query: " + query, e);
 			throw new Exception("Unable to url-encode query: " + query, e);
 		}
 		try {
@@ -236,59 +224,40 @@ public class SearcherBean {
 			urlcon.setRequestProperty("Authorization", "Basic " + azureKeyEnc);
 			urlcon.setConnectTimeout(connectTimeout);
 			urlcon.setReadTimeout(readerTimeout);
-			stream = new InputStreamReader(urlcon.getInputStream(),
-					StandardCharsets.UTF_8);
+			stream = new InputStreamReader(urlcon.getInputStream(), StandardCharsets.UTF_8);
 		} catch (MalformedURLException e) {
-			logger.log(Level.SEVERE, "Unable to create URL object: "
-					+ azureUrlString);
-			throw new Exception("Unable to create URL object: "
-					+ azureUrlString, e);
+			logger.log(Level.SEVERE, "Unable to create URL object: " + azureUrlString, e);
+			throw new Exception("Unable to create URL object: " + azureUrlString, e);
 		} catch (ProtocolException e) {
-			logger.log(Level.SEVERE,
-					"Unable to set \"GET\" method for connection: " + urlcon);
-			throw new Exception("Unable to set \"GET\" method for connection: "
-					+ urlcon, e);
+			logger.log(Level.SEVERE, "Unable to set \"GET\" method for connection: " + urlcon, e);
+			throw new Exception("Unable to set \"GET\" method for connection: " + urlcon, e);
 		} catch (IOException e) {
-			logger.log(Level.SEVERE,
-					"Input/output error happened during connection to URL: "
-							+ azureUrlString);
-			throw new Exception(
-					"Input/output error happened during connection to URL: "
-							+ azureUrlString, e);
+			logger.log(Level.SEVERE, "Input/output error happened during connection to URL: " + azureUrlString, e);
+			throw new Exception("Input/output error happened during connection to URL: " + azureUrlString, e);
 		}
 		try (BufferedReader buf = new BufferedReader(stream)) {
 			String line;
 			while ((line = buf.readLine()) != null)
 				out.append(line);
 		} catch (IOException e) {
-			logger.log(Level.SEVERE,
-					"Input/output error happened during reading data from URL: "
-							+ azureUrlString);
-			throw new Exception(
-					"Input/output error happened during reading data from URL: "
-							+ azureUrlString, e);
+			logger.log(Level.SEVERE, "Input/output error happened during reading data from URL: " + azureUrlString, e);
+			throw new Exception("Input/output error happened during reading data from URL: " + azureUrlString, e);
 		}
-		try (JsonReader jreader = Json.createReader(new StringReader(out
-				.toString()))) {
+		try (JsonReader jreader = Json.createReader(new StringReader(out.toString()))) {
 			JsonObject json = jreader.readObject();
 			JsonObject d = json.getJsonObject("d");
 			JsonArray results = d.getJsonArray("results");
 			int resultsLength = results.size();
 			for (int i = 0; i < resultsLength; i++) {
 				JsonObject result = results.getJsonObject(i);
-				WebResult found = (new WebResult(queryObj,
-						result.getString("Title"), result.getString("Url"),
-						result.getString("DisplayUrl"),
-						result.getString("Description")));
+				WebResult found = (new WebResult(queryObj, result.getString("Title"), result.getString("Url"),
+						result.getString("DisplayUrl"), result.getString("Description")));
 				searchResult.add(found);
 				em.persist(found);
 			}
 		} catch (Exception e) {
-			logger.log(Level.SEVERE,
-					"Error happened during parsing JSON from URL: "
-							+ azureUrlString);
-			throw new Exception("Error happened during parsing JSON from URL: "
-					+ azureUrlString, e);
+			logger.log(Level.SEVERE, "Error happened during parsing JSON from URL: " + azureUrlString, e);
+			throw new Exception("Error happened during parsing JSON from URL: " + azureUrlString, e);
 		}
 		return searchResult;
 	}

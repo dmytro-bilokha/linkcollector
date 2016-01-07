@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- * A bean to clean database from old data
+ * A bean to clean database from old data.
  */
 @Singleton
 public class OldDataEraserBean {
@@ -20,8 +20,7 @@ public class OldDataEraserBean {
 	/**
 	 * Logger for logging each invocation of database cleaning.
 	 */
-	private static final Logger logger = Logger
-			.getLogger("bilokhado.linkcollector.ejb.OldDataEraserBean");
+	private static final Logger logger = Logger.getLogger("bilokhado.linkcollector.ejb.OldDataEraserBean");
 
 	/**
 	 * Entity manager for access database.
@@ -50,7 +49,7 @@ public class OldDataEraserBean {
 	}
 
 	/**
-	 * Removes old date from database via named MySQL native query
+	 * Removes old date from database via named MySQL native query.
 	 */
 	@Schedule(second = "30", minute = "*/5", hour = "*", persistent = false)
 	private void removeOutdated() {
