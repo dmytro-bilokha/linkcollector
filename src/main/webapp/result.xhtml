@@ -42,12 +42,8 @@
 					columnClasses="results-table-1-col,results-table-2-col">
 					<f:facet name="caption">Search results for<br />"#{resultViewBean.searchQuery}"</f:facet>
 					<h:column>
-						<p>
-							<h:outputText value="Score:" />
-						</p>
-						<p>
-							<h:outputText value="#{srt.score}" />
-						</p>
+						<p>Score:</p>
+						<p>#{srt.score}</p>
 					</h:column>
 					<h:column>
 						<p>
@@ -55,13 +51,8 @@
 						#{srt.scoredWebResult.title}
 						</h:outputLink>
 						</p>
-						<p>
-							<h:outputText value="#{srt.scoredWebResult.displayUrl}"
-								styleClass="display-url" />
-						</p>
-						<p>
-							<h:outputText value="#{srt.scoredWebResult.description}" />
-						</p>
+						<p class="display-url">#{srt.scoredWebResult.displayUrl}"</p>
+						<p>#{srt.scoredWebResult.description}</p>
 					</h:column>
 				</h:dataTable>
 			</ui:fragment>

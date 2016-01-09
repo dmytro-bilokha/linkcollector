@@ -19,7 +19,7 @@
 				<div class="center">
 					<table class="inputform">
 						<tr>
-							<td><h:outputText value="Search query: " /></td>
+							<td>Search query:</td>
 							<td><h:inputText value="#{searchDataBean.searchQuery}"
 									maxlength="150" title="String for passing to search engines"
 									style="width:99%" required="true"
@@ -31,12 +31,11 @@
 							<td><h:message for="searchquery" id="qmsg" /></td>
 						</tr>
 						<tr>
-							<td><h:outputText value="Tag to add: " /></td>
+							<td>Tag to add:</td>
 							<td><h:inputText value="#{searchDataBean.tagText}"
 									title="Evaluation tag string" size="25" maxlenght="50"
 									autocomplete="off" binding="#{tagTextComponent}" id="tagtext" />
-								<h:outputText value=" Tag weight: " /> <h:inputText
-									value="#{searchDataBean.tagWeight}"
+								Tag weight: <h:inputText value="#{searchDataBean.tagWeight}"
 									title="Weight of tag for scoring" size="5" maxlength="4"
 									converterMessage="Weight must be integer value from -999 to 10000"
 									autocomplete="off" id="tagweight">
