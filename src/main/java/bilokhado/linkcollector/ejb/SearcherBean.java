@@ -49,7 +49,7 @@ public class SearcherBean {
 	private static final Logger logger = Logger.getLogger("bilokhado.linkcollector.ejb.SearcherBean");
 
 	/**
-	 * String pattern for Bing search engine/
+	 * String pattern for Bing search engine.
 	 */
 	private static String AZURE_URL_PATTERN = "https://api.datamarket.azure.com/Bing/Search/v1/Web?Options=%%27DisableLocationDetection%%27&$top=50&$format=json&Query=%%27%s%%27";
 

@@ -13,6 +13,10 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * A web filter class to disable JSF pages caching.
+ *
+ */
 @WebFilter(servletNames = { "Faces Servlet" })
 public class NoCacheFilter implements Filter {
 

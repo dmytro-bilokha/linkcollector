@@ -35,7 +35,7 @@ public class ScoringBean {
 	private ConfigBean config;
 
 	/**
-	 * Connection timeout value
+	 * Connection timeout value.
 	 */
 	private int connectTimeout;
 
