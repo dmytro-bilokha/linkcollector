@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "WEB_RESULT")
 @NamedQuery(name = "WebResult.findByQueryHash", query = "SELECT wr FROM WebResult wr WHERE wr.searchQuery.queryHash = :hash")
-public class WebResult implements Serializable {
+public class WebResult implements Serializable, Comparable<WebResult> {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,11 +98,22 @@ public class WebResult implements Serializable {
 	}
 
 	@Override
+	public int compareTo(WebResult other) {
+		int comparingResult;
+		if ((comparingResult = title.compareTo(other.title)) != 0)
+			return comparingResult;
+		if ((comparingResult = url.compareTo(other.url)) != 0)
+			return comparingResult;
+		return searchQuery.compareTo(other.searchQuery);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = prime
 				+ ((searchQuery == null) ? 0 : searchQuery.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
 
@@ -124,6 +135,11 @@ public class WebResult implements Serializable {
 			if (other.url != null)
 				return false;
 		} else if (!url.equals(other.url))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
 			return false;
 		return true;
 	}

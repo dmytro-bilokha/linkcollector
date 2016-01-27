@@ -17,7 +17,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "SEARCH_QUERY")
 @NamedNativeQuery(name = "SearchQuery.deleteOutdated", query = "DELETE FROM SEARCH_QUERY WHERE TIME_PERSIST < SUBDATE(NOW(), INTERVAL ? HOUR);")
-public class SearchQuery implements Serializable {
+public class SearchQuery implements Serializable, Comparable<SearchQuery> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -51,11 +51,18 @@ public class SearchQuery implements Serializable {
 	}
 
 	@Override
+	public int compareTo(SearchQuery other) {
+		int comparingResult;
+		if ((comparingResult = timeStamp.compareTo(other.timeStamp)) != 0)
+			return comparingResult;
+		return Long.compare(queryHash, other.queryHash);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = prime + (int) (queryHash ^ (queryHash >>> 32));
-		result = prime * result
-				+ ((timeStamp == null) ? 0 : timeStamp.hashCode());
+		result = prime * result + ((timeStamp == null) ? 0 : timeStamp.hashCode());
 		return result;
 	}
 
