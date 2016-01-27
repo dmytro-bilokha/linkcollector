@@ -53,7 +53,7 @@ public class TagsList implements Serializable, Cloneable {
 		while (iterator.hasPrevious()) {
 			QueryTag t = iterator.previous();
 			t.setTagText(t.getTagText().toLowerCase());
-			if (seen.putIfAbsent(t.getTagText(), Boolean.TRUE) != null || t.getTagWeight() == 0) {
+			if (t.getTagWeight() == 0 || seen.putIfAbsent(t.getTagText(), Boolean.TRUE) != null) {
 				iterator.remove();
 			}
 		}
