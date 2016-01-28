@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
@@ -17,7 +18,12 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "WEB_RESULT")
-@NamedQuery(name = "WebResult.findByQueryHash", query = "SELECT wr FROM WebResult wr WHERE wr.searchQuery.queryHash = :hash")
+@NamedQueries({
+		@NamedQuery(name = "WebResult.findByQueryHash", query = "SELECT wr FROM WebResult wr "
+				+ "WHERE wr.searchQuery.queryHash = :hash"),
+		@NamedQuery(name = "WebResult.findByHashes", query = "SELECT wr FROM WebResult wr "
+				+ "WHERE wr.searchQuery.queryHash = :queryhash AND wr.id NOT IN "
+				+ "(SELECT sr.scoredWebResult.id FROM ScoringResult sr WHERE sr.tagsHash = :tagshash )"), })
 public class WebResult implements Serializable, Comparable<WebResult> {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -55,8 +61,7 @@ public class WebResult implements Serializable, Comparable<WebResult> {
 		this.searchQuery = searchQuery;
 	}
 
-	public WebResult(SearchQuery searchQuery, String title, String url,
-			String displayUrl, String description) {
+	public WebResult(SearchQuery searchQuery, String title, String url, String displayUrl, String description) {
 		this.searchQuery = searchQuery;
 		this.title = title;
 		this.url = url;
@@ -85,8 +90,7 @@ public class WebResult implements Serializable, Comparable<WebResult> {
 	}
 
 	public void setDisplayUrl(String displayUrl) {
-		this.displayUrl = displayUrl.length() <= 45 ? displayUrl : displayUrl
-				.substring(0, 45) + "...";
+		this.displayUrl = displayUrl.length() <= 45 ? displayUrl : displayUrl.substring(0, 45) + "...";
 	}
 
 	public String getDescription() {
@@ -110,8 +114,7 @@ public class WebResult implements Serializable, Comparable<WebResult> {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = prime
-				+ ((searchQuery == null) ? 0 : searchQuery.hashCode());
+		int result = prime + ((searchQuery == null) ? 0 : searchQuery.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;

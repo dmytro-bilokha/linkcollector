@@ -3,6 +3,7 @@ package bilokhado.linkcollector.entity;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,16 +50,18 @@ public class TagsList implements Serializable, Cloneable {
 	 * Normalizes tags list via removing tags with zero weight, deleting
 	 * duplicates and converting tags text to lower case.
 	 */
-	public void normalize() {
+	public QueryTag[] getNormalizedTagsArray() {
 		Map<String, Boolean> seen = new HashMap<>();
+		List<QueryTag> normalizedTagsList = new ArrayList<>(tags.size());
 		ListIterator<QueryTag> iterator = tags.listIterator(tags.size());
 		while (iterator.hasPrevious()) {
 			QueryTag t = iterator.previous();
-			t.setTagText(t.getTagText().toLowerCase());
-			if (t.getTagWeight() == 0 || seen.putIfAbsent(t.getTagText(), Boolean.TRUE) != null) {
-				iterator.remove();
+			String lowerTagText = t.getTagText().toLowerCase();
+			if (t.getTagWeight() != 0 && seen.putIfAbsent(lowerTagText, Boolean.TRUE) == null) {
+				normalizedTagsList.add(t);
 			}
 		}
+		return normalizedTagsList.toArray(new QueryTag[normalizedTagsList.size()]);
 	}
 
 	/**
@@ -69,6 +72,18 @@ public class TagsList implements Serializable, Cloneable {
 	public long calculateHash() {
 		long hash = 1;
 		for (QueryTag t : tags)
+			hash = 31 * hash + t.hashCode();
+		return hash;
+	}
+
+	/**
+	 * Calculates hash for storing in database and determining uniqueness.
+	 * 
+	 * @return the calculated hash
+	 */
+	public static long calculateHash(QueryTag[] tagsArray) {
+		long hash = 1;
+		for (QueryTag t : tagsArray)
 			hash = 31 * hash + t.hashCode();
 		return hash;
 	}

@@ -15,7 +15,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "SCORING_RESULT")
-@NamedQuery(name = "ScoringResult.findByTagsHash", query = "SELECT sr FROM ScoringResult sr WHERE sr.tagsHash = :hash ORDER BY sr.score DESC")
+@NamedQuery(name = "ScoringResult.findByHashes", query = "SELECT sr FROM ScoringResult sr "
+		+ "JOIN sr.scoredWebResult wr WHERE sr.tagsHash = :tagshash AND "
+		+ "wr.searchQuery.queryHash = :queryhash ORDER BY sr.score DESC")
 public class ScoringResult implements Serializable, Comparable<ScoringResult> {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -104,7 +106,8 @@ public class ScoringResult implements Serializable, Comparable<ScoringResult> {
 
 	@Override
 	public String toString() {
-		return "ScoringResult [tagsHash=" + tagsHash + "]";
+		return "ScoringResult [tagsHash=" + tagsHash + ", scoredWebResult=" + scoredWebResult + ", score=" + score
+				+ "]";
 	}
 
 }
