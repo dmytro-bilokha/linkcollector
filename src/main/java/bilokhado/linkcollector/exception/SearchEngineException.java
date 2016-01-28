@@ -1,5 +1,9 @@
 package bilokhado.linkcollector.exception;
 
+/**
+ * An exception class used for signaling run-time failure of reading or parsing
+ * data from the search engine.
+ */
 public class SearchEngineException extends Exception {
 
 	public SearchEngineException() {

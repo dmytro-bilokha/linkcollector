@@ -1,5 +1,9 @@
 package bilokhado.linkcollector.exception;
 
+/**
+ * An exception class used for signaling run-time failure of converting JSON
+ * string to TagsList object.
+ */
 public class TagsListParsingException extends Exception {
 
 	public TagsListParsingException() {
