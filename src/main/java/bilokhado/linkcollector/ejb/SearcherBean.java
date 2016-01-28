@@ -12,7 +12,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -37,6 +41,7 @@ import bilokhado.linkcollector.entity.ScoringResult;
 import bilokhado.linkcollector.entity.SearchQuery;
 import bilokhado.linkcollector.entity.TagsList;
 import bilokhado.linkcollector.entity.WebResult;
+import bilokhado.linkcollector.exception.SearchEngineException;
 
 /**
  * A bean to find web pages with Bing search engine and store they in database.
@@ -147,7 +152,7 @@ public class SearcherBean {
 	 *             if data is malformed, connection failure, JSON parsing errors
 	 *             and so on
 	 */
-	public List<ScoringResult> search(String query, TagsList tags) throws Exception {
+	public List<ScoringResult> search(String query, TagsList tags) throws SearchEngineException {
 		String normalizedQuery = normalizeQuery(query);
 		tags.normalize();
 		long queryHash = calculateQueryHash(normalizedQuery);
@@ -179,11 +184,22 @@ public class SearcherBean {
 				while (iterator.hasNext()) {
 					Future<ScoringResult> fscore = iterator.next();
 					if (fscore.isDone()) {
-						ScoringResult sr = fscore.get();
-						sr.setTagsHash(tagsHash);
-						scoredResults.add(sr);
-						em.persist(sr);
-						iterator.remove();
+						try {
+							ScoringResult sr = fscore.get(scoringTimeout, TimeUnit.NANOSECONDS);
+							sr.setTagsHash(tagsHash);
+							scoredResults.add(sr);
+							em.persist(sr);
+							iterator.remove();
+						} catch (CancellationException | ExecutionException e) {
+							logger.log(Level.SEVERE, "Exception while getting scored result", e);
+							continue;
+						} catch (TimeoutException e) {
+							logger.log(Level.SEVERE, "Timeout exception while getting scored result", e);
+							break;
+						} catch (InterruptedException e) {
+							logger.log(Level.SEVERE, "Got InterruptedException while getting scored result", e);
+							break;
+						}
 					}
 				}
 			} while (!asyncScores.isEmpty() && System.nanoTime() - startTime < scoringTimeout);
@@ -206,7 +222,7 @@ public class SearcherBean {
 	 *             if URL encoding, connecting or reading web page, JSON parsing
 	 *             errors occur
 	 */
-	public List<WebResult> findAndSave(String query, SearchQuery queryObj) throws Exception {
+	public List<WebResult> findAndSave(String query, SearchQuery queryObj) throws SearchEngineException {
 		List<WebResult> searchResult = new LinkedList<>();
 		HttpURLConnection urlcon = null;
 		String azureUrlString;
@@ -215,7 +231,7 @@ public class SearcherBean {
 			azureUrlString = String.format(AZURE_URL_PATTERN, URLEncoder.encode(query, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			logger.log(Level.SEVERE, "Unable to url-encode query: " + query, e);
-			throw new Exception("Unable to url-encode query: " + query, e);
+			throw new SearchEngineException("Unable to url-encode query: " + query, e);
 		}
 		try {
 			URL azureUrl = new URL(azureUrlString);
@@ -226,13 +242,14 @@ public class SearcherBean {
 			urlcon.setReadTimeout(readerTimeout);
 		} catch (MalformedURLException e) {
 			logger.log(Level.SEVERE, "Unable to create URL object: " + azureUrlString, e);
-			throw new Exception("Unable to create URL object: " + azureUrlString, e);
+			throw new SearchEngineException("Unable to create URL object: " + azureUrlString, e);
 		} catch (ProtocolException e) {
 			logger.log(Level.SEVERE, "Unable to set \"GET\" method for connection: " + urlcon, e);
-			throw new Exception("Unable to set \"GET\" method for connection: " + urlcon, e);
+			throw new SearchEngineException("Unable to set \"GET\" method for connection: " + urlcon, e);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Input/output error happened during connection to URL: " + azureUrlString, e);
-			throw new Exception("Input/output error happened during connection to URL: " + azureUrlString, e);
+			throw new SearchEngineException("Input/output error happened during connection to URL: " + azureUrlString,
+					e);
 		}
 		try (InputStreamReader urlReader = new InputStreamReader(urlcon.getInputStream(), StandardCharsets.UTF_8);
 				BufferedReader bufUrlReader = new BufferedReader(urlReader);
@@ -250,7 +267,7 @@ public class SearcherBean {
 			}
 		} catch (IOException | JsonException | IllegalStateException | ClassCastException | NullPointerException e) {
 			logger.log(Level.SEVERE, "Error happened during parsing JSON from URL: " + azureUrlString, e);
-			throw new Exception("Error happened during parsing JSON from URL: " + azureUrlString, e);
+			throw new SearchEngineException("Error happened during parsing JSON from URL: " + azureUrlString, e);
 		}
 		return searchResult;
 	}

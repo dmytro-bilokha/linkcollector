@@ -17,6 +17,8 @@ import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser;
 
+import bilokhado.linkcollector.exception.TagsListParsingException;
+
 /**
  * A class representing list of tags for web pages scoring.
  */
@@ -90,7 +92,7 @@ public class TagsList implements Serializable, Cloneable {
 	 * @throws Exception
 	 *             if JSON creation error occurs
 	 */
-	public void populateFromJson(String jsonData) throws Exception {
+	public void populateFromJson(String jsonData) throws TagsListParsingException {
 		try (JsonParser parser = Json.createParser(new StringReader(jsonData))) {
 			String key = null;
 			while (parser.hasNext()) {
@@ -115,7 +117,7 @@ public class TagsList implements Serializable, Cloneable {
 			}
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error happen while parsing JSON string: " + jsonData, e);
-			throw new Exception("Unable to decode tags list from URL", e);
+			throw new TagsListParsingException("Unable to decode tags list from URL", e);
 		}
 	}
 
